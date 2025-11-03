@@ -1,0 +1,252 @@
+@use '../../styles/variables' as vars;
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 1rem 1rem;
+    
+    .auth-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem 2rem;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        width: 100%;
+        max-width: 380px;
+        position: relative;
+        
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, vars.$primary-green, vars.$dark-green);
+            border-radius: 15px 15px 0 0;
+        }
+    }
+    
+    .profile-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, vars.$light-green, vars.$primary-green);
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 20px rgba(vars.$primary-green, 0.25);
+        
+        i {
+            color: white;
+            font-size: 2rem;
+        }
+    }
+    
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #2d3748;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.2rem;
+        position: relative;
+        
+        .input-group {
+            position: relative;
+            
+            .input-group-text {
+                position: absolute;
+                left: 0.8rem;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                color: vars.$primary-green;
+                z-index: 10;
+                
+                i {
+                    font-size: 1rem;
+                }
+            }
+            
+            .form-control {
+                background: vars.$light-green;
+                border: 2px solid transparent;
+                border-radius: 12px;
+                padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+                font-size: 0.9rem;
+                transition: all 0.3s ease;
+                
+                &::placeholder {
+                    color: #a0a0a0;
+                    font-weight: 400;
+                }
+                
+                &:focus {
+                    background: white;
+                    border-color: vars.$primary-green;
+                    box-shadow: 0 0 0 3px rgba(vars.$primary-green, 0.1);
+                    outline: none;
+                }
+                
+                &.is-invalid {
+                    border-color: #e53e3e;
+                    background: #fed7d7;
+                }
+            }
+        }
+        
+        .invalid-feedback {
+            color: #e53e3e;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            margin-left: 0.8rem;
+        }
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, vars.$primary-green, vars.$dark-green);
+        border: none;
+        border-radius: 12px;
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 0.5rem;
+        
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(vars.$primary-green, 0.3);
+        }
+        
+        &:disabled {
+            background: #a0a0a0;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .spinner-border-sm {
+            margin-right: 0.5rem;
+        }
+    }
+    
+    .error-message {
+        background: #fed7d7;
+        color: #c53030;
+        padding: 0.6rem 0.8rem;
+        border-radius: 8px;
+        margin: 0.8rem 0;
+        font-size: 0.85rem;
+        border-left: 3px solid #e53e3e;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+        
+        p {
+            color: #718096;
+            margin: 0;
+            font-size: 0.9rem;
+            
+            a {
+                color: vars.$primary-green;
+                text-decoration: none;
+                font-weight: 600;
+                
+                &:hover {
+                    color: vars.$dark-green;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+    .login-container {
+        padding: 0.5rem;
+        
+        .auth-card {
+            padding: 1.5rem 1.2rem;
+            border-radius: 12px;
+            max-width: 95%;
+            
+            h2 {
+                font-size: 1.3rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            .profile-icon {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 1.2rem;
+                
+                i {
+                    font-size: 1.8rem;
+                }
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+                
+                .input-group .form-control {
+                    padding: 0.7rem 0.7rem 0.7rem 2.2rem;
+                    font-size: 0.85rem;
+                }
+            }
+            
+            .btn-primary {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.85rem;
+            }
+            
+            .register-link {
+                margin-top: 1.2rem;
+                padding-top: 0.8rem;
+            }
+        }
+    }
+}
+
+@media (max-height: 700px) {
+    .login-container {
+        padding: 0.5rem;
+        
+        .auth-card {
+            padding: 1.5rem 2rem;
+            
+            .profile-icon {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 1rem;
+                
+                i {
+                    font-size: 1.8rem;
+                }
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+}

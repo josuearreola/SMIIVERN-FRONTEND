@@ -1,0 +1,193 @@
+<div class="dashboard-layout">
+    <header class="dashboard-header">
+        <div class="header-left">
+            <h1 class="app-title">SMIIVERN</h1>
+        </div>
+
+        <div class="header-center">
+            <div class="profile-status">
+                <span class="profile-label">Perfil Activo:</span>
+                <span class="profile-name">tomate</span>
+                <i class="bi bi-pencil-square profile-edit-icon"></i>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="last-update">
+                <span class="update-label">Última actualización:</span>
+                <span class="update-time">{{ currentTime }}</span>
+            </div>
+
+            <div class="theme-switch-container">
+                <i class="bi bi-sun-fill theme-icon sun" [class.active]="!isDarkTheme"></i>
+                <div class="theme-switch" (click)="toggleTheme()">
+                    <div class="switch-slider" [class.dark]="isDarkTheme"></div>
+                </div>
+                <i class="bi bi-moon-fill theme-icon moon" [class.active]="isDarkTheme"></i>
+            </div>
+            <button class="reports-btn" (click)="navigateTo('reports')">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Reportes</span>
+            </button>
+
+            <div class="hamburger-menu">
+                <button class="hamburger-btn" (click)="toggleMobileMenu()">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div class="mobile-menu-dropdown" [class.show]="showMobileMenu">
+                    <div class="menu-item" (click)="navigateTo('settings'); closeMobileMenu()">
+                        <i class="bi bi-gear"></i>
+                        <span>Configuración</span>
+                    </div>
+                    <div class="menu-item" (click)="navigateTo('profile'); closeMobileMenu()">
+                        <i class="bi bi-person"></i>
+                        <span>Perfil</span>
+                    </div>
+                    <div class="menu-divider"></div>
+                    <div class="menu-item logout" (click)="logout(); closeMobileMenu()">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Cerrar Sesión</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <main class="dashboard-main">
+        <div class="dashboard-content">
+            <div class="left-column">
+                <div class="control-section">
+                    <div class="section-header">
+                        <i class="bi bi-sliders"></i>
+                        <h3>Control y Estado del Sistema</h3>
+                    </div>
+                    <div class="control-content">
+                        <div class="irrigation-control">
+                            <button class="irrigation-btn" [class.active]="irrigationActive"
+                                (click)="toggleIrrigation()">
+                                <div class="btn-circle">
+                                    <i class="bi bi-droplet-fill"></i>
+                                </div>
+                                <span>{{ irrigationActive ? 'Desactivar Riego Manual' : 'Activar Riego Manual' }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="alerts-section">
+                    <div class="section-header">
+                        <i class="bi bi-bell"></i>
+                        <h3>Alertas Activas</h3>
+                    </div>
+                    <div class="alerts-content">
+                        <div class="alert-item warning">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span class="alert-label">Advertencia</span>
+                            <span class="alert-text">Niverl de Fósforo (P) bajo.</span>
+                        </div>
+                        <div class="alert-item error">
+                            <i class="bi bi-x-circle-fill"></i>
+                            <span class="alert-label">Error</span>
+                            <span class="alert-text">Falla en el sensor de ph</span>
+                        </div>
+                        <div class="alert-item info">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <span class="alert-label">Info</span>
+                            <span class="alert-text">Proximo ciclo de riego en 2 horas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="monitoring-section">
+                    <div class="section-header">
+                        <div class="header-left">
+                            <i class="bi bi-activity"></i>
+                            <h3>Monitoreo de sensores</h3>
+                        </div>
+                        <a class="history-link" href="#" (click)="navigateTo('history')">
+                            <i class="bi bi-clock-history"></i>
+                            Ver historial
+                        </a>
+                    </div>
+                    <div class="sensors-content">
+                        <div class="progress-sensors">
+                            <div class="sensor-item">
+                                <label>Temperatura</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill temperature" [style.width.%]="temperaturePercent"></div>
+                                    <span class="progress-value">{{ temperatureValue }}°C</span>
+                                </div>
+                                <div class="progress-labels">
+                                    <span>10°C</span>
+                                    <span>22°C</span>
+                                    <span>30°C</span>
+                                </div>
+                            </div>
+
+                            <div class="sensor-item">
+                                <label>Humedad</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill humidity" [style.width.%]="humidityPercent"></div>
+                                    <span class="progress-value">{{ humidityValue }}%</span>
+                                </div>
+                                <div class="progress-labels">
+                                    <span>40%</span>
+                                    <span>65%</span>
+                                    <span>80%</span>
+                                </div>
+                            </div>
+                            <div class="sensor-item">
+                                <label>pH del Suelo</label>
+                                <div class="progress-bar">
+                                    <div class="progress-fill ph" [style.width.%]="phPercent"></div>
+                                    <span class="progress-value">{{ phValue }}</span>
+                                </div>
+                                <div class="progress-labels">
+                                    <span>5.0</span>
+                                    <span>6.5</span>
+                                    <span>7.5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="nutrients-section">
+                            <div class="nutrients-header">
+                                <i class="bi bi-circle"></i>
+                                <h4>Nutrientes (NPK)</h4>
+                            </div>
+                            <div class="nutrients-gauges">
+                                <div class="gauge-item">
+                                    <div class="gauge-circle">
+                                        <div class="gauge-fill nitrogen"
+                                            [style.background]="getGaugeBackground(nitrogenValue)"></div>
+                                        <div class="gauge-value">{{ nitrogenValue }}%</div>
+                                    </div>
+                                    <label>Nitrógeno (N)</label>
+                                </div>
+
+                                <div class="gauge-item">
+                                    <div class="gauge-circle">
+                                        <div class="gauge-fill phosphorus"
+                                            [style.background]="getGaugeBackground(phosphorusValue)"></div>
+                                        <div class="gauge-value">{{ phosphorusValue }}%</div>
+                                    </div>
+                                    <label>Fósforo (P)</label>
+                                </div>
+
+                                <div class="gauge-item">
+                                    <div class="gauge-circle">
+                                        <div class="gauge-fill potassium"
+                                            [style.background]="getGaugeBackground(potassiumValue)"></div>
+                                        <div class="gauge-value">{{ potassiumValue }}%</div>
+                                    </div>
+                                    <label>Potasio (K)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

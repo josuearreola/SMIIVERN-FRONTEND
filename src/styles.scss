@@ -1,0 +1,53 @@
+// Variables globales
+$primary-green: #85A98F;
+$light-green: #D3F1DF;
+$dark-green: #5A6C57;
+$error-red: #E74C3C;
+$warning-yellow: #F1C40F;
+
+// Usar @use en lugar de @import para Bootstrap
+@use 'bootstrap/scss/bootstrap';
+
+// Clase base para autenticación
+.auth-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.auth-card {
+    width: 100%;
+    padding: 2rem;
+}
+
+// Estilos comunes para formularios
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    border-radius: 20px;
+    border: 1px solid $light-green;
+    padding: 0.8rem 1.2rem;
+    background-color: $light-green;
+    
+    &:focus {
+        border-color: $primary-green;
+        box-shadow: 0 0 0 0.2rem rgba($primary-green, 0.25);
+    }
+}
+
+.btn-primary {
+    background-color: $primary-green;
+    border-color: $primary-green;
+    border-radius: 20px;
+    padding: 0.8rem 2rem;
+    
+    &:hover {
+        background-color: $dark-green;
+        border-color: $dark-green;
+    }
+}

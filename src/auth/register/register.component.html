@@ -1,0 +1,134 @@
+<div class="register-container">
+    <div class="auth-card">
+        <div class="profile-icon">
+            <i class="bi bi-person-plus-fill"></i>
+        </div>
+        <h2 class="text-center mb-4">Crear Cuenta</h2>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-envelope"></i>
+                    </span>
+                    <input 
+                        type="email" 
+                        class="form-control"
+                        formControlName="email" 
+                        placeholder="Email"
+                        [class.is-invalid]="isFieldInvalid('email')">
+                </div>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                    {{ getFieldError('email') }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person"></i>
+                    </span>
+                    <input 
+                        type="text" 
+                        class="form-control"
+                        formControlName="nombre" 
+                        placeholder="Nombre"
+                        [class.is-invalid]="isFieldInvalid('nombre')">
+                </div>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('nombre')">
+                    {{ getFieldError('nombre') }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person"></i>
+                    </span>
+                    <input 
+                        type="text" 
+                        class="form-control"
+                        formControlName="apellido" 
+                        placeholder="Apellido"
+                        [class.is-invalid]="isFieldInvalid('apellido')">
+                </div>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('apellido')">
+                    {{ getFieldError('apellido') }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock"></i>
+                    </span>
+                    <input 
+                        type="password" 
+                        class="form-control"
+                        formControlName="password" 
+                        placeholder="Contraseña"
+                        [class.is-invalid]="isFieldInvalid('password')">
+                </div>
+                <div class="password-requirements" *ngIf="isFieldInvalid('password') && registerForm.get('password')?.errors?.['passwordStrength']">
+                    <div class="requirements-title">La contraseña debe contener:</div>
+                    <div class="requirement-item" 
+                         [class.valid]="registerForm.get('password')?.errors?.['passwordStrength']?.isLengthValid"
+                         [class.invalid]="!registerForm.get('password')?.errors?.['passwordStrength']?.isLengthValid">
+                        <i class="bi" [class.bi-check-circle-fill]="registerForm.get('password')?.errors?.['passwordStrength']?.isLengthValid"
+                                     [class.bi-x-circle-fill]="!registerForm.get('password')?.errors?.['passwordStrength']?.isLengthValid"></i>
+                        Mínimo 8 caracteres
+                    </div>
+                    <div class="requirement-item" 
+                         [class.valid]="registerForm.get('password')?.errors?.['passwordStrength']?.hasUpperCase"
+                         [class.invalid]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasUpperCase">
+                        <i class="bi" [class.bi-check-circle-fill]="registerForm.get('password')?.errors?.['passwordStrength']?.hasUpperCase"
+                                     [class.bi-x-circle-fill]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasUpperCase"></i>
+                        Una letra mayúscula
+                    </div>
+                    <div class="requirement-item" 
+                         [class.valid]="registerForm.get('password')?.errors?.['passwordStrength']?.hasLowerCase"
+                         [class.invalid]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasLowerCase">
+                        <i class="bi" [class.bi-check-circle-fill]="registerForm.get('password')?.errors?.['passwordStrength']?.hasLowerCase"
+                                     [class.bi-x-circle-fill]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasLowerCase"></i>
+                        Una letra minúscula
+                    </div>
+                    <div class="requirement-item" 
+                         [class.valid]="registerForm.get('password')?.errors?.['passwordStrength']?.hasNumeric"
+                         [class.invalid]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasNumeric">
+                        <i class="bi" [class.bi-check-circle-fill]="registerForm.get('password')?.errors?.['passwordStrength']?.hasNumeric"
+                                     [class.bi-x-circle-fill]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasNumeric"></i>
+                        Un número
+                    </div>
+                    <div class="requirement-item" 
+                         [class.valid]="registerForm.get('password')?.errors?.['passwordStrength']?.hasSpecial"
+                         [class.invalid]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasSpecial">
+                        <i class="bi" [class.bi-check-circle-fill]="registerForm.get('password')?.errors?.['passwordStrength']?.hasSpecial"
+                                     [class.bi-x-circle-fill]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasSpecial"></i>
+                        Un carácter especial (!@#$%^&*)
+                    </div>
+                    <div class="requirement-item" 
+                         [class.valid]="registerForm.get('password')?.errors?.['passwordStrength']?.hasNoSpaces"
+                         [class.invalid]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasNoSpaces">
+                        <i class="bi" [class.bi-check-circle-fill]="registerForm.get('password')?.errors?.['passwordStrength']?.hasNoSpaces"
+                                     [class.bi-x-circle-fill]="!registerForm.get('password')?.errors?.['passwordStrength']?.hasNoSpaces"></i>
+                        Sin espacios
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="error-message" *ngIf="errorMessage">
+                {{ errorMessage }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" [disabled]="registerForm.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isLoading ? 'Registrando...' : 'Registrarse' }}
+            </button>
+        </form>
+
+        <div class="login-link mt-4">
+            <p>¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión aquí</a></p>
+        </div>
+    </div>
+</div>
