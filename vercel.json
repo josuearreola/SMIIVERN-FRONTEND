@@ -1,6 +1,6 @@
 {
   "buildCommand": "ng build --configuration production",
-  "outputDirectory": "dist/frontend-smiivern",
+  "outputDirectory": "dist/frontend-smiivern/browser",
   "rewrites": [
     {
       "source": "/(.*)",
