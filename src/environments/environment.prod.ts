@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://smiivern-backprueba.vercel.app/'
+    apiUrl: 'https://smiivern-backprueba.vercel.app'
 };
