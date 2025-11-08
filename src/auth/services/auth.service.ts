@@ -7,8 +7,7 @@ import { HttpHeaders } from '@angular/common/http';
 
 const httpOptions = {
     headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Content-Type': 'application/json'
     })
 };
 @Injectable({
@@ -23,6 +22,10 @@ export class AuthService {
     constructor(private http: HttpClient) {}
 
     login(credentials: { email: string, password: string }): Observable<any> {
+        console.log('🚀 Environment:', environment);
+        console.log('🚀 API Base URL:', this.API_BASE_URL);
+        console.log('🚀 Login URL:', this.AUTH_ENDPOINTS.login);
+        console.log('🚀 Credentials:', credentials);
         return this.http.post(this.AUTH_ENDPOINTS.login, credentials, httpOptions);
     }
     register(userData: {
