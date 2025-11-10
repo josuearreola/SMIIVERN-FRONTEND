@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from '../../auth/services/token.service';
+import { RoleService } from '../shared/services/role.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,13 +30,14 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private roleService: RoleService,
   ) { }
   ngOnInit(): void {
     this.loadUserInfo();
     this.updateTime();
     this.startTimeUpdate();
-    this.generateRandomData(); 
+    this.generateRandomData();
     this.startDataUpdate();
   }
   private loadUserInfo(): void {
@@ -114,6 +116,19 @@ export class DashboardComponent implements OnInit {
     setInterval(() => {
       this.generateRandomData();
     }, 3000);
+  }
+
+  get puedeAccederConfiguracion(): boolean {
+    return this.roleService.puedeAccederConfiguracion();
+  }
+  get puedeControlarRiego(): boolean {
+    return this.roleService.puedeControlarRiego();
+  }
+  get puedeCrearPerfilesActivos(): boolean {
+    return this.roleService.puedeCrearPerfilesActivos();
+  }
+  get puedeAccederReportes(): boolean {
+    return this.roleService.puedeAccederReportes();
   }
 }
 

@@ -8,7 +8,7 @@
             <div class="profile-status">
                 <span class="profile-label">Perfil Activo:</span>
                 <span class="profile-name">tomate</span>
-                <i class="bi bi-pencil-square profile-edit-icon"></i>
+                <i *ngIf="puedeCrearPerfilesActivos" class="bi bi-pencil-square profile-edit-icon"></i>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
                 </div>
                 <i class="bi bi-moon-fill theme-icon moon" [class.active]="isDarkTheme"></i>
             </div>
-            <button class="reports-btn" (click)="navigateTo('reports')">
+            <button *ngIf="puedeAccederReportes" class="reports-btn" (click)="navigateTo('reports')">
                 <i class="bi bi-file-earmark-text"></i>
                 <span>Reportes</span>
             </button>
@@ -35,7 +35,7 @@
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <div class="mobile-menu-dropdown" [class.show]="showMobileMenu">
-                    <div class="menu-item" (click)="navigateTo('settings'); closeMobileMenu()">
+                    <div *ngIf="puedeAccederConfiguracion" class="menu-item" (click)="navigateTo('settings'); closeMobileMenu()">
                         <i class="bi bi-gear"></i>
                         <span>Configuración</span>
                     </div>
@@ -63,7 +63,7 @@
                         <h3>Control y Estado del Sistema</h3>
                     </div>
                     <div class="control-content">
-                        <div class="irrigation-control">
+                        <div *ngIf="puedeControlarRiego" class="irrigation-control">
                             <button class="irrigation-btn" [class.active]="irrigationActive"
                                 (click)="toggleIrrigation()">
                                 <div class="btn-circle">
