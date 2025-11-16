@@ -59,6 +59,11 @@
                 color: vars.$primary-green;
                 font-weight: 600;
                 text-transform: lowercase;
+&.sin-perfil {
+        color: #999;
+        font-style: italic;
+        text-transform: none;
+    }
             }
 
             .profile-edit-icon {

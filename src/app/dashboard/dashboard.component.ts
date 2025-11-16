@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { TokenService } from '../../auth/services/token.service';
 import { RoleService } from '../shared/services/role.service';
 
@@ -9,13 +10,16 @@ import { RoleService } from '../shared/services/role.service';
   styleUrls: ['./dashboard.component.scss'],
   standalone: false
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   sidebarCollapsed = false;
   userInfo: any = null;
   currentTime: string = '';
   isDarkTheme = false;
   showMobileMenu = false;
   irrigationActive = false;
+
+  // Destroy subject para subscripciones
+  private destroy$ = new Subject<void>();
 
   temperatureValue = 24.5;
   temperaturePercent = 60;
@@ -31,7 +35,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private router: Router,
     private tokenService: TokenService,
-    private roleService: RoleService,
+    private roleService: RoleService
   ) { }
   ngOnInit(): void {
     this.loadUserInfo();
@@ -39,6 +43,11 @@ export class DashboardComponent implements OnInit {
     this.startTimeUpdate();
     this.generateRandomData();
     this.startDataUpdate();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   private loadUserInfo(): void {
     this.userInfo = this.tokenService.getUserInfo();
@@ -123,9 +132,6 @@ export class DashboardComponent implements OnInit {
   }
   get puedeControlarRiego(): boolean {
     return this.roleService.puedeControlarRiego();
-  }
-  get puedeCrearPerfilesActivos(): boolean {
-    return this.roleService.puedeCrearPerfilesActivos();
   }
   get puedeAccederReportes(): boolean {
     return this.roleService.puedeAccederReportes();
