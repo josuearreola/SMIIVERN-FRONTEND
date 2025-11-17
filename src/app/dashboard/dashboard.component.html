@@ -45,6 +45,19 @@
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <div class="mobile-menu-dropdown" [class.show]="showMobileMenu">
+                    <!-- Toggle de tema solo para móvil -->
+                    <div class="menu-item theme-toggle-mobile" (click)="toggleTheme()">
+                        <i class="bi bi-palette"></i>
+                        <span>Cambiar tema</span>
+                        <div class="mobile-theme-switch">
+                            <i class="bi bi-sun-fill" [class.active]="!isDarkTheme"></i>
+                            <div class="mobile-switch">
+                                <div class="mobile-switch-slider" [class.dark]="isDarkTheme"></div>
+                            </div>
+                            <i class="bi bi-moon-fill" [class.active]="isDarkTheme"></i>
+                        </div>
+                    </div>
+                    <div class="menu-divider"></div>
                     <div *ngIf="puedeAccederConfiguracion" class="menu-item" (click)="navigateTo('settings'); closeMobileMenu()">
                         <i class="bi bi-gear"></i>
                         <span>Configuración</span>

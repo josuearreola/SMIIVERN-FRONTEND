@@ -304,6 +304,58 @@
                         color: var(--text-primary) !important;
                     font-size: 0.85rem;
 
+                    &.theme-toggle-mobile {
+                            justify-content: space-between;
+                    
+                            .mobile-theme-switch {
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                    
+                                i {
+                                    font-size: 0.8rem;
+                                    color: var(--text-disabled);
+                                    transition: color 0.3s ease;
+                    
+                                    &.active {
+                                        &.bi-sun-fill {
+                                            color: #ffa500;
+                                        }
+                    
+                                        &.bi-moon-fill {
+                                            color: #4169e1;
+                                        }
+                                    }
+                                }
+                    
+                                .mobile-switch {
+                                    position: relative;
+                                    width: 35px;
+                                    height: 18px;
+                                    background: #e0e0e0;
+                                    border-radius: 10px;
+                                    cursor: pointer;
+                                    transition: background 0.3s ease;
+                    
+                                    .mobile-switch-slider {
+                                        position: absolute;
+                                        top: 1px;
+                                        left: 1px;
+                                        width: 16px;
+                                        height: 16px;
+                                        background: white;
+                                        border-radius: 50%;
+                                        transition: transform 0.3s ease;
+                                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+                    
+                                        &.dark {
+                                            transform: translateX(17px);
+                                            background: #333;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     &:first-child {
                         border-radius: 12px 12px 0 0;
                     }
@@ -539,6 +591,17 @@
                 grid-template-columns: 1fr 1fr; // Columnas iguales en tablet
                 gap: 1rem;
             }
+                        // Ocultar toggle de tema del menú hamburguesa en tablet
+                        .mobile-menu-dropdown .theme-toggle-mobile {
+                            display: none !important;
+                        }
+            
+                        // Mostrar theme-switch en tablet
+                        .dashboard-header .header-right .theme-switch-container {
+                            display: flex !important;
+                            align-items: center;
+                            gap: 0.6rem;
+                        }
         
             // Mantener nutrientes horizontales pero más compactos en tablet
             .nutrients-gauges {
@@ -1066,6 +1129,17 @@
         gap: 1rem; // Reducir de 1.5rem a 1rem
     }
 
+                // Mostrar theme-switch en desktop
+                .dashboard-header .header-right .theme-switch-container {
+                    display: flex !important;
+                    align-items: center;
+                    gap: 0.8rem;
+                }
+                
+                // Ocultar toggle de tema del menú hamburguesa en desktop
+                .mobile-menu-dropdown .theme-toggle-mobile {
+                    display: none !important;
+                }
     // Optimizar nutrientes para desktop - horizontal y compacto
     .nutrients-gauges {
         grid-template-columns: repeat(3, 1fr) !important;
