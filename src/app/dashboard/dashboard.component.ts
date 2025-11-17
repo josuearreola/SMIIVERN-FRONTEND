@@ -133,8 +133,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
   get puedeControlarRiego(): boolean {
     return this.roleService.puedeControlarRiego();
   }
+  get puedeCrearPerfilesActivos(): boolean {
+    return this.roleService.puedeCrearPerfilesActivos();
+  }
+  get puedeVerPerfilesActivos(): boolean {
+    return this.roleService.puedeVerPerfilesActivos();
+  }
   get puedeAccederReportes(): boolean {
     return this.roleService.puedeAccederReportes();
+  }
+
+  // Métodos para gestión de perfiles
+  abrirGestionPerfiles(): void {
+    if (this.puedeCrearPerfilesActivos) {
+      console.log('Abriendo gestión de perfiles...');
+      // Aquí iría la lógica para abrir el modal o navegar
+    }
+  }
+
+  get nombrePerfilActivo(): string {
+    // Por ahora retornamos un valor por defecto
+    return 'Lechuga Romana';
+  }
+
+  get tienePerfilActivo(): boolean {
+    // Por ahora retornamos true para mostrar el perfil
+    return true;
   }
 }
 

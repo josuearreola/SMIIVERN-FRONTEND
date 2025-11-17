@@ -20,10 +20,10 @@ export class RoleService {
         return this.obtenerRolUsuarioActivo() === RolUsuario.ADMINISTRADOR;
     }
     esEstudiante(): boolean {
-        return this.obtenerRolUsuarioActivo() === RolUsuario.MANTENIMIENTO;
+        return this.obtenerRolUsuarioActivo() === RolUsuario.USUARIO;
     }
     esMantenimiento(): boolean {
-        return this.obtenerRolUsuarioActivo() === RolUsuario.USUARIO;
+        return this.obtenerRolUsuarioActivo() === RolUsuario.MANTENIMIENTO;
     }
 
     puedeAccederConfiguracion(): boolean{
@@ -37,6 +37,10 @@ export class RoleService {
     puedeCrearPerfilesActivos(): boolean{
         const rol = this.obtenerRolUsuarioActivo();
         return rol === RolUsuario.ADMINISTRADOR || rol === RolUsuario.MANTENIMIENTO;
+    }
+    puedeVerPerfilesActivos(): boolean {
+        // Todos los usuarios pueden ver perfiles activos
+        return true;
     }
      puedeAccederReportes(): boolean{
         const rol = this.obtenerRolUsuarioActivo();

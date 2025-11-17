@@ -5,7 +5,14 @@
         </div>
 
         <div class="header-center">
-            <!-- Espacio para información central del dashboard -->
+            <div *ngIf="puedeVerPerfilesActivos" class="profile-status" [class.clickable]="puedeCrearPerfilesActivos"
+                (click)="puedeCrearPerfilesActivos && abrirGestionPerfiles()">
+                <span class="profile-label">Perfil Activo:</span>
+                <span class="profile-name" [class.sin-perfil]="!tienePerfilActivo">
+                    {{nombrePerfilActivo}}
+                </span>
+                <i *ngIf="puedeCrearPerfilesActivos" class="bi bi-pencil-square profile-edit-icon"></i>
+            </div>
         </div>
 
         <div class="header-right">
