@@ -1,0 +1,127 @@
+// Variables para tema oscuro
+// Manteniendo la paleta verde como base pero adaptada para modo oscuro
+
+// === TEMA CLARO (ACTUAL) ===
+:root {
+  // Colores principales (mantener intactos)
+  --primary-green: #85A98F;
+  --light-green: #D3F1DF;
+  --dark-green: #5A6C57;
+  --error-red: #E74C3C;
+  --warning-yellow: #F1C40F;
+
+  // Fondos
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  
+  // Textos
+  --text-primary: #333333;
+  --text-secondary: #6c757d;
+  --text-muted: #9ca3af;
+  
+  // Bordes
+  --border-light: #e9ecef;
+  --border-medium: #dee2e6;
+  --border-dark: #ced4da;
+  
+  // Sombras
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+  --shadow-heavy: rgba(0, 0, 0, 0.2);
+  
+  // Variables para valores de barras de progreso
+  --progress-value-bg: #ffffff;
+  --progress-value-text: #333333;
+  --progress-value-border: #e0e0e0;
+  --progress-value-shadow: rgba(0, 0, 0, 0.1);
+  
+  // Variables para backdrop y overlays
+  --backdrop-overlay: rgba(0, 0, 0, 0.3);
+  --modal-backdrop: rgba(0, 0, 0, 0.6);
+}
+
+// === TEMA OSCURO ===
+body.dark-theme {
+  // Colores principales (mantener la misma paleta verde)
+  --primary-green: #85A98F;
+  --light-green: #2a3d2e;  // Verde claro oscurecido para fondos
+  --dark-green: #9db5a2;   // Verde oscuro aclarado para textos
+  
+  // Fondos oscuros
+  --bg-primary: #1a1a1a;      // Negro suave principal
+  --bg-secondary: #2d2d2d;    // Gris oscuro secundario
+  --bg-tertiary: #404040;     // Gris medio para elementos elevated
+  
+  // Textos claros y brillantes
+  --text-primary: #ffffff;        // Blanco puro para textos principales
+  --text-secondary: #e0e0e0;      // Blanco suave para textos secundarios
+  --text-muted: #b0b0b0;          // Gris claro para texto muted
+  
+  // Bordes oscuros
+  --border-light: #404040;
+  --border-medium: #505050;
+  --border-dark: #606060;
+  
+  // Sombras para tema oscuro
+  --shadow-light: rgba(0, 0, 0, 0.3);
+  --shadow-medium: rgba(0, 0, 0, 0.4);
+  --shadow-heavy: rgba(0, 0, 0, 0.5);
+
+  // Colores especiales para tema oscuro
+  --card-bg: #252525;
+  --modal-bg: #2a2a2a;
+  --input-bg: #333333;
+  --input-border: #505050;
+  --hover-bg: #383838;
+  
+  // Variables para valores de barras de progreso en tema oscuro
+  --progress-value-bg: #2d2d2d;
+  --progress-value-text: #ffffff;
+  --progress-value-border: #505050;
+  --progress-value-shadow: rgba(0, 0, 0, 0.4);
+  
+  // Variables para backdrop y overlays en tema oscuro
+  --backdrop-overlay: rgba(0, 0, 0, 0.5);
+  --modal-backdrop: rgba(0, 0, 0, 0.8);
+}
+
+// === MIXINS PARA FACILITAR USO ===
+@mixin theme-transition {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+@mixin card-theme {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  @include theme-transition;
+}
+
+@mixin modal-theme {
+  background-color: var(--modal-bg, var(--bg-primary));
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 15px 35px var(--shadow-heavy);
+  @include theme-transition;
+}
+
+@mixin input-theme {
+  background-color: var(--input-bg, var(--bg-primary));
+  color: var(--text-primary);
+  border: 1px solid var(--input-border, var(--border-medium));
+  @include theme-transition;
+  
+  &:focus {
+    background-color: var(--input-bg, var(--bg-primary));
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 2px rgba(133, 169, 143, 0.2);
+  }
+  
+  &::placeholder {
+    color: var(--text-muted);
+  }
+}

@@ -1,0 +1,333 @@
+// Estilos globales para tema oscuro
+// Se aplican a todos los componentes de la aplicación
+
+@use './theme-variables' as theme;
+@use './variables' as vars;
+
+// === ESTILOS GLOBALES BASE ===
+* {
+  @include theme.theme-transition;
+}
+
+// === MODALES GLOBALES ===
+.modal-backdrop {
+  background: var(--modal-backdrop);
+  @include theme.theme-transition;
+}
+
+.modal-content, 
+.perfil-form-modal,
+.perfiles-modal {
+  @include theme.modal-theme;
+}
+
+// === FORMULARIOS GLOBALES ===
+.form-control,
+input[type="text"],
+input[type="email"], 
+input[type="password"],
+input[type="number"],
+textarea,
+select {
+  @include theme.input-theme;
+}
+
+// === BOTONES GLOBALES ===
+.btn {
+  @include theme.theme-transition;
+  
+  &.btn-primary {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    color: white;
+    
+    &:hover {
+      background-color: var(--dark-green, #5A6C57);
+      border-color: var(--dark-green, #5A6C57);
+    }
+  }
+  
+  &.btn-secondary {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-medium);
+    color: var(--text-primary);
+    
+    &:hover {
+      background-color: var(--hover-bg);
+    }
+  }
+}
+
+// === CARDS Y MODALES ESPECÍFICOS ===
+.perfil-card,
+.metric-card,
+.create-card,
+.action-card {
+  @include theme.card-theme;
+  
+  h5, .card-title {
+    color: var(--text-primary) !important;
+  }
+  
+  .param-label,
+  .param-value,
+  .card-text {
+    color: var(--text-primary) !important;
+  }
+  
+  .tipo-planta,
+  .estado-badge {
+    background-color: var(--light-green) !important;
+    color: var(--text-primary) !important;
+  }
+}
+
+// === MODAL DE CONFIRMACIÓN DE ELIMINACIÓN ===
+.delete-modal {
+  @include theme.modal-theme;
+  border-radius: 16px;
+  padding: 0;
+  max-width: 450px;
+  overflow: hidden;
+  
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-light);
+    
+    h4 {
+      color: var(--text-primary) !important;
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      i.bi-exclamation-triangle {
+        color: #F39C12 !important;
+        font-size: 1.3rem;
+      }
+    }
+  }
+  
+  .modal-body {
+    padding: 24px;
+    
+    p {
+      color: var(--text-primary) !important;
+      margin: 0;
+      line-height: 1.6;
+      font-size: 1rem;
+      
+      strong {
+        color: var(--text-primary) !important;
+        font-weight: 600;
+      }
+    }
+  }
+  
+  .modal-actions {
+    padding: 16px 24px 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      &:hover {
+        transform: translateY(-1px);
+      }
+    }
+    
+    .btn-secondary {
+      background-color: var(--bg-tertiary) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--border-medium) !important;
+      
+      &:hover {
+        background-color: var(--hover-bg) !important;
+      }
+    }
+    
+    .btn-danger {
+      background-color: #E74C3C !important;
+      color: white !important;
+      
+      &:hover {
+        background-color: #c0392b !important;
+      }
+      
+      i.bi-check-lg {
+        color: white !important;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+// Asegurar que el backdrop tenga el overlay correcto
+.modal-backdrop.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  
+  body.dark-theme & {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+}
+
+// === BOTONES EN MODALES ===
+.btn-danger {
+  background-color: var(--error-red, #E74C3C) !important;
+  border-color: var(--error-red, #E74C3C) !important;
+  color: white !important;
+}
+
+.btn-cancel {
+  background-color: var(--bg-tertiary) !important;
+  border-color: var(--border-medium) !important;
+  color: var(--text-primary) !important;
+}
+
+// === HAMBURGER MENU ===
+.hamburger-menu,
+.mobile-menu {
+  background-color: var(--bg-primary) !important;
+  border: 1px solid var(--border-medium) !important;
+  @include theme.theme-transition;
+  
+  .menu-item {
+    color: var(--text-primary) !important;
+    
+    &:hover {
+      background-color: var(--hover-bg) !important;
+    }
+  }
+}
+
+// === TEXTOS GLOBALES ===
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary) !important;
+  @include theme.theme-transition;
+}
+
+p, span, div, label, small, li, td, th {
+  color: var(--text-primary) !important;
+  @include theme.theme-transition;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+// === BORDES GLOBALES ===
+.border {
+  border-color: var(--border-light) !important;
+}
+
+.border-top {
+  border-top-color: var(--border-light) !important;
+}
+
+.border-bottom {
+  border-bottom-color: var(--border-light) !important;
+}
+
+// === FONDOS GLOBALES ===
+.bg-light {
+  background-color: var(--bg-secondary) !important;
+}
+
+.bg-white {
+  background-color: var(--bg-primary) !important;
+}
+
+// === LOGIN/REGISTRO ESPECÍFICOS ===
+.login-container,
+.register-container {
+  background-color: var(--bg-secondary);
+  @include theme.theme-transition;
+  
+  .form-container {
+    @include theme.modal-theme;
+  }
+  
+  .welcome-text {
+    color: var(--text-primary);
+    @include theme.theme-transition;
+  }
+}
+
+// === ELEMENTOS ESPECÍFICOS DE LA APP ===
+.error-message {
+  color: var(--error-red, #E74C3C);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--error-red, #E74C3C);
+  @include theme.theme-transition;
+}
+
+.success-message {
+  color: var(--primary-green);
+  background-color: var(--light-green);
+  border: 1px solid var(--primary-green);
+  @include theme.theme-transition;
+}
+
+// === SCROLLBARS EN TEMA OSCURO ===
+body.dark-theme {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-dark);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--text-muted);
+    }
+  }
+}
+
+// === PLACEHOLDERS EN TEMA OSCURO ===
+body.dark-theme {
+  ::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
+  }
+}
+
+// === FOCUS STATES GLOBALES ===
+*:focus {
+  outline-color: var(--primary-green) !important;
+  
+  body.dark-theme & {
+    outline-color: var(--primary-green) !important;
+  }
+}

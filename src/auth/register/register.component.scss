@@ -1,20 +1,21 @@
-@use '../../styles/variables' as vars;
+@use '../../styles/theme-variables' as theme;
 
 .register-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    padding: 0.5rem;
+    background: var(--bg-primary);
+    padding: 1rem;
+    @include theme.theme-transition;
     
     .auth-card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.2rem 1.8rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        @include theme.card-theme;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: var(--shadow-heavy);
         width: 100%;
-        max-width: 360px;
+        max-width: 380px;
         position: relative;
         
         &::before {
@@ -23,35 +24,35 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, vars.$primary-green, vars.$dark-green);
-            border-radius: 12px 12px 0 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--dark-green, #5A6C57));
+            border-radius: 15px 15px 0 0;
         }
     }
     
     .profile-icon {
-        width: 55px;
-        height: 55px;
-        background: linear-gradient(135deg, vars.$light-green, vars.$primary-green);
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--light-green, #D3F1DF), var(--primary-green));
         border-radius: 50%;
-        margin: 0 auto 0.8rem;
+        margin: 0 auto 1.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 12px rgba(vars.$primary-green, 0.2);
+        box-shadow: 0 8px 20px rgba(133, 169, 143, 0.25);
         
         i {
             color: white;
-            font-size: 1.5rem;
+            font-size: 2rem;
         }
     }
     
     h2 {
         text-align: center;
-        margin-bottom: 1rem;
-        color: #2d3748;
+        margin-bottom: 1.5rem;
+        color: var(--text-primary) !important;
         font-weight: 700;
-        font-size: 1.2rem;
+        font-size: 1.5rem;
     }
     
     .form-group {
@@ -68,7 +69,7 @@
                 transform: translateY(-50%);
                 background: none;
                 border: none;
-                color: vars.$primary-green;
+                color: var(--primary-green);
                 z-index: 150;
                 pointer-events: none;
                 
@@ -78,7 +79,9 @@
             }
             
             .form-control {
-                background: vars.$light-green;
+                background: var(--bg-secondary) !important;
+                    color: var(--text-primary) !important;
+                    border: 2px solid var(--border-light);
                 border: 1px solid transparent;
                 border-radius: 8px;
                 padding: 0.5rem 0.5rem 0.5rem 2.5rem;
@@ -89,21 +92,21 @@
                 z-index: 1;
                 
                 &::placeholder {
-                    color: #a0a0a0;
+                    color: var(--text-secondary);
                     font-weight: 400;
                     font-size: 0.8rem;
                 }
                 
                 &:focus {
-                    background: white;
-                    border-color: vars.$primary-green;
-                    box-shadow: 0 0 0 2px rgba(vars.$primary-green, 0.1);
+                    background: var(--bg-primary) !important;
+                        border-color: var(--primary-green);
+                        box-shadow: 0 0 0 3px rgba(133, 169, 143, 0.1);
                     outline: none;
                 }
                 
                 &.is-invalid {
                     border-color: #e53e3e;
-                    background: #fed7d7;
+                    background: var(--error-bg-light) !important;
                 }
             }
         }
@@ -202,7 +205,7 @@
     }
     
     .btn-primary {
-        background: linear-gradient(135deg, vars.$primary-green, vars.$dark-green);
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green, #5A6C57));
         border: none;
         border-radius: 8px;
         padding: 0.6rem 1rem;
@@ -210,10 +213,11 @@
         font-size: 0.8rem;
         transition: all 0.3s ease;
         width: 100%;
+        color: white !important;
         
         &:hover:not(:disabled) {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(vars.$primary-green, 0.3);
+            box-shadow: 0 4px 12px rgba(133, 169, 143, 0.3);
         }
         
         &:disabled {
@@ -223,7 +227,7 @@
     }
     
     .error-message {
-        background: #fed7d7;
+        background: var(--error-bg-light) !important;
         color: #c53030;
         padding: 0.4rem 0.6rem;
         border-radius: 6px;
@@ -239,17 +243,17 @@
         border-top: 1px solid #e2e8f0;
         
         p {
-            color: #718096;
+            color: var(--text-secondary) !important;
             margin: 0;
             font-size: 0.8rem;
             
             a {
-                color: vars.$primary-green;
+                color: var(--primary-green) !important;
                 text-decoration: none;
                 font-weight: 600;
                 
                 &:hover {
-                    color: vars.$dark-green;
+                    color: var(--dark-green, #5A6C57) !important;
                     text-decoration: underline;
                 }
             }

@@ -1,3 +1,5 @@
+/* Imports */
+@use '../../styles/theme-variables' as theme;
 /* Modal backdrop */
 .modal-backdrop {
   position: fixed;
@@ -22,13 +24,12 @@
 
 /* Modal container */
 .perfil-form-modal {
-  background: white;
+  @include theme.modal-theme;
   border-radius: 12px;
   width: 90%;
   max-width: 700px;
   max-height: 90vh;
   overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
   transform: translateY(20px);
   transition: transform 0.3s ease;
   margin: 20px;
@@ -55,12 +56,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
-  border-bottom: 1px solid #e9ecef;
-  background: #f8f9fa;
+  border-bottom: 1px solid var(--border-light);
+    background: var(--bg-secondary);
 
   h3 {
     margin: 0;
-    color: #2d3436;
+    color: var(--text-primary) !important;
     font-weight: 600;
     font-size: 18px;
   }
@@ -69,15 +70,15 @@
     background: none;
     border: none;
     font-size: 18px;
-    color: #6c757d;
+    color: var(--text-secondary);
     cursor: pointer;
     padding: 6px;
     border-radius: 50%;
     transition: all 0.2s ease;
 
     &:hover {
-      background: #e9ecef;
-      color: #495057;
+      background: var(--hover-bg);
+        color: var(--text-primary);
     }
   }
 }
@@ -92,21 +93,22 @@
 /* Form sections */
 .form-section {
   margin-bottom: 24px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--border-light);
   border-radius: 8px;
   padding: 16px;
+  background-color: var(--bg-primary);
 
   h4 {
     margin: 0 0 16px 0;
     font-size: 16px;
     font-weight: 600;
-    color: #2d3436;
+    color: var(--text-primary) !important;
     display: flex;
     align-items: center;
     gap: 8px;
 
     i {
-      color: #28a745;
+      color: var(--primary-green);
     }
   }
 }
@@ -132,21 +134,23 @@
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
-    color: #495057;
+    color: var(--text-primary) !important;
     font-size: 14px;
   }
 
   .form-control {
     width: 100%;
     padding: 8px 12px;
-    border: 1px solid #ced4da;
+    border: 1px solid var(--border-medium);
     border-radius: 6px;
     font-size: 14px;
     transition: border-color 0.2s ease;
+    background-color: var(--bg-primary) !important;
+      color: var(--text-primary) !important;
 
     &:focus {
       outline: none;
-      border-color: #28a745;
+      border-color: var(--primary-green);
       box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
     }
 
@@ -179,7 +183,7 @@
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #495057;
+    color: var(--text-primary) !important;
     font-size: 14px;
   }
 
@@ -191,8 +195,10 @@
 
     input {
       padding: 8px 10px;
-      border: 1px solid #ced4da;
+      border: 1px solid var(--border-medium);
       border-radius: 4px;
+      background-color: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
       font-size: 14px;
       text-align: center;
       min-width: 0;
@@ -248,20 +254,21 @@
   }
 
   &.btn-secondary {
-    background: #6c757d;
-    color: white;
+    background: var(--bg-tertiary) !important;
+      color: var(--text-primary) !important;
+      border: 1px solid var(--border-medium);
 
     &:hover:not(:disabled) {
-      background: #5a6268;
+      background: var(--hover-bg) !important;
     }
   }
 
   &.btn-primary {
-    background: #28a745;
-    color: white;
+    background: var(--primary-green) !important;
+      color: white !important;
 
     &:hover:not(:disabled) {
-      background: #218838;
+      background: var(--dark-green, #218838) !important;
     }
   }
 }
@@ -342,43 +349,47 @@
 
   .form-section {
     padding: 12px;
-h4 {
-    font-size: 16px;
-  }
-}
-
-.param-group {
-  margin-bottom: 16px;
-
-  label {
-    font-size: 13px;
-    margin-bottom: 6px;
-  }
-}
-
-  .range-inputs {
-    gap: 4px;
-
-    input {
-      max-width: 70px; /* Aún más pequeños para pantallas muy pequeñas */
-      padding: 6px 4px;
-      font-size: 12px;
-      
-      &::placeholder {
-        font-size: 10px;
+    
+    h4 {
+        font-size: 16px;
       }
     }
 
-    span {
-      font-size: 11px;
-    }
-  }.form-actions {
-  padding-top: 16px;
-  gap: 8px;
+    .param-group {
+      margin-bottom: 16px;
 
-  .btn {
-    padding: 12px 16px;
-    font-size: 14px;
-  }
+    label {
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+
+        .range-inputs {
+          gap: 4px;
+
+      input {
+          max-width: 70px;
+          /* Aún más pequeños para pantallas muy pequeñas */
+          padding: 6px 4px;
+          font-size: 12px;
+      
+          &::placeholder {
+            font-size: 10px;
+          }
+        }
+
+            span {
+              font-size: 11px;
+            }
+        }
+        }
+    
+        .form-actions {
+          padding-top: 16px;
+          gap: 8px;
+
+    .btn {
+        padding: 12px 16px;
+        font-size: 14px;
+      }
   }
 }

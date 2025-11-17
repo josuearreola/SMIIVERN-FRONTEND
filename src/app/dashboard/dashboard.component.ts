@@ -4,6 +4,7 @@ import { Subject, takeUntil, filter } from 'rxjs';
 import { TokenService } from '../../auth/services/token.service';
 import { RoleService } from '../shared/services/role.service';
 import { PerfilesPlantas, PerfilPlanta } from '../perfilesPlantas/perfiles-plantas.service';
+import { ThemeService } from '../core/services/theme.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,7 +41,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private router: Router,
     private tokenService: TokenService,
     private roleService: RoleService,
-    private perfilesService: PerfilesPlantas
+    private perfilesService: PerfilesPlantas,
+    private themeService: ThemeService
   ) { }
   ngOnInit(): void {
     this.loadUserInfo();
@@ -51,6 +53,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // Prevenir navegación hacia atrás
     this.preventBackNavigation();
+
+    // Suscribirse al tema
+    this.themeService.isDark$.pipe(takeUntil(this.destroy$))
+      .subscribe(isDark => {
+        this.isDarkTheme = isDark;
+      });
 
     // Suscribirse al perfil activo
     this.perfilesService.perfilActivo$.pipe(takeUntil(this.destroy$))
@@ -123,8 +131,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.router.navigate([`/dashboard/${route}`]);
   }
   toggleTheme(): void {
-    this.isDarkTheme = !this.isDarkTheme;
-    console.log('Tema cambiado. isDarkTheme:', this.isDarkTheme);
+    this.themeService.toggleTheme();
   }
 
   // Detectar clics fuera del menú hamburguesa

@@ -28,7 +28,7 @@ export class PwaUpdateService {
 
   private mostrarNotificacionActualizacion() {
     const actualizar = confirm(
-      '🚀 ¡Hay una nueva versión disponible!\n\n' +
+      '¡Hay una nueva versión disponible!\n\n' +
       'Se han realizado mejoras y correcciones.\n' +
       '¿Deseas actualizar ahora?'
     );
@@ -64,7 +64,6 @@ export class PwaUpdateService {
         `;
         document.body.appendChild(loading);
 
-        // Recargar la página después de un pequeño delay
         setTimeout(() => {
           window.location.reload();
         }, 2000);

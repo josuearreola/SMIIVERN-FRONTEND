@@ -1,18 +1,19 @@
-@use '../../styles/variables' as vars;
+@use '../../styles/theme-variables' as theme;
 
 .login-container {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: var(--bg-primary);
     padding: 1rem 1rem;
+    @include theme.theme-transition;
     
     .auth-card {
-        background: white;
+        @include theme.card-theme;
         border-radius: 15px;
         padding: 2rem 2rem;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--shadow-heavy);
         width: 100%;
         max-width: 380px;
         position: relative;
@@ -24,7 +25,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, vars.$primary-green, vars.$dark-green);
+            background: linear-gradient(90deg, var(--primary-green), var(--dark-green, #5A6C57));
             border-radius: 15px 15px 0 0;
         }
     }
@@ -32,13 +33,13 @@
     .profile-icon {
         width: 70px;
         height: 70px;
-        background: linear-gradient(135deg, vars.$light-green, vars.$primary-green);
+        background: linear-gradient(135deg, var(--light-green, #D3F1DF), var(--primary-green));
         border-radius: 50%;
         margin: 0 auto 1.5rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 8px 20px rgba(vars.$primary-green, 0.25);
+        box-shadow: 0 8px 20px rgba(133, 169, 143, 0.25);
         
         i {
             color: white;
@@ -49,7 +50,7 @@
     h2 {
         text-align: center;
         margin-bottom: 1.5rem;
-        color: #2d3748;
+        color: var(--text-primary) !important;
         font-weight: 700;
         font-size: 1.5rem;
     }
@@ -68,7 +69,7 @@
                 transform: translateY(-50%);
                 background: none;
                 border: none;
-                color: vars.$primary-green;
+                color: var(--primary-green);
                 z-index: 150;
                 pointer-events: none;
                 width: 20px;
@@ -79,30 +80,31 @@
             }
             
             .form-control {
-                background: vars.$light-green;
-                border: 2px solid transparent;
+                background: var(--bg-secondary) !important;
+                    border: 2px solid var(--border-light);
                 border-radius: 12px;
                 padding: 0.8rem 1rem 0.8rem 2.5rem;
                 font-size: 0.9rem;
                 transition: all 0.3s ease;
                 position: relative;
                 z-index: 1;
+                color: var(--text-primary) !important;
                 
                 &::placeholder {
-                    color: #a0a0a0;
+                    color: var(--text-secondary);
                     font-weight: 400;
                 }
                 
                 &:focus {
-                    background: white;
-                    border-color: vars.$primary-green;
-                    box-shadow: 0 0 0 3px rgba(vars.$primary-green, 0.1);
+                    background: var(--bg-primary) !important;
+                        border-color: var(--primary-green);
+                        box-shadow: 0 0 0 3px rgba(133, 169, 143, 0.1);
                     outline: none;
                 }
                 
                 &.is-invalid {
                     border-color: #e53e3e;
-                    background: #fed7d7;
+                    background: var(--error-bg-light) !important;
                 }
             }
         }
@@ -116,7 +118,7 @@
     }
     
     .btn-primary {
-        background: linear-gradient(135deg, vars.$primary-green, vars.$dark-green);
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green, #5A6C57));
         border: none;
         border-radius: 12px;
         padding: 0.8rem 1.5rem;
@@ -127,14 +129,15 @@
         transition: all 0.3s ease;
         width: 100%;
         margin-top: 0.5rem;
+        color: white !important;
         
         &:hover {
             transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(vars.$primary-green, 0.3);
+            box-shadow: 0 8px 20px rgba(133, 169, 143, 0.3);
         }
         
         &:disabled {
-            background: #a0a0a0;
+            background: var(--text-disabled) !important;
             transform: none;
             box-shadow: none;
         }
@@ -145,7 +148,7 @@
     }
     
     .error-message {
-        background: #fed7d7;
+        background: var(--error-bg-light) !important;
         color: #c53030;
         padding: 0.6rem 0.8rem;
         border-radius: 8px;
@@ -158,20 +161,20 @@
         text-align: center;
         margin-top: 1.5rem;
         padding-top: 1rem;
-        border-top: 1px solid #e2e8f0;
+        border-top: 1px solid var(--border-light);
         
         p {
-            color: #718096;
+            color: var(--text-secondary) !important;
             margin: 0;
             font-size: 0.9rem;
             
             a {
-                color: vars.$primary-green;
+                color: var(--primary-green) !important;
                 text-decoration: none;
                 font-weight: 600;
                 
                 &:hover {
-                    color: vars.$dark-green;
+                    color: var(--dark-green, #5A6C57) !important;
                     text-decoration: underline;
                 }
             }

@@ -1,4 +1,6 @@
-// Variables globales
+// Variables globales y temas
+@use 'styles/theme-variables';
+@use 'styles/global-theme';
 $primary-green: #85A98F;
 $light-green: #D3F1DF;
 $dark-green: #5A6C57;
