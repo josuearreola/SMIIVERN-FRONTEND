@@ -586,8 +586,49 @@
                 }
             }
         }
+    
+    
+    // Estilos responsive para el contenido del dashboard
+    .dashboard-main .dashboard-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
     }
-}
+    
+    .nutrients-gauges {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .irrigation-control .irrigation-btn {
+        .btn-circle {
+            width: 60px;
+            height: 60px;
+            
+            i {
+                font-size: 1.5rem;
+            }
+        }
+        
+        span {
+            font-size: 0.75rem;
+            max-width: 100px;
+        }
+    }
+    
+    .alerts-content .alert-item {
+        padding: 0.5rem 0.6rem;
+        gap: 0.5rem;
+        
+        i {
+            font-size: 0.9rem;
+        }
+        
+        .alert-label,
+        .alert-text {
+            font-size: 0.75rem;
+        }
+    }
 
 
 // Estilos para el contenido del dashboard
@@ -873,47 +914,6 @@
                 text-align: center;
                 line-height: 1.2;
             }
-        }
-    }
-}
-
-// Responsive para el contenido
-@media (max-width: 768px) {
-    .dashboard-main .dashboard-content {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1rem;
-    }
-    
-    .nutrients-gauges {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-    }
-    
-    .irrigation-control .irrigation-btn .btn-circle {
-        width: 60px;
-        height: 60px;
-        
-        i {
-            font-size: 1.5rem;
-        }
-    }
-     .irrigation-control .irrigation-btn span {
-        font-size: 0.75rem;
-        max-width: 100px;
-    }
-    
-    .alerts-content .alert-item {
-        padding: 0.5rem 0.6rem;
-        gap: 0.5rem;
-        
-        i {
-            font-size: 0.9rem;
-        }
-        
-        .alert-label,
-        .alert-text {
-            font-size: 0.75rem;
         }
     }
 }
