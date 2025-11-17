@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subject, takeUntil, filter } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TokenService } from '../../auth/services/token.service';
 import { RoleService } from '../shared/services/role.service';
 import { PerfilesPlantas, PerfilPlanta } from '../perfilesPlantas/perfiles-plantas.service';
 import { ThemeService } from '../core/services/theme.service';
+import { PerfilModalComponent } from '../shared/components/perfil-modal/perfil-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,7 +47,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private tokenService: TokenService,
     private roleService: RoleService,
     private perfilesService: PerfilesPlantas,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private modalService: NgbModal
   ) { }
   ngOnInit(): void {
     this.loadUserInfo();
@@ -133,6 +136,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   navigateTo(route: string): void {
     if (route === 'settings') {
       this.showConfiguracionModal = true;
+    } else if (route === 'profile') {
+      this.abrirPerfilModal();
     } else {
       this.router.navigate([`/dashboard/${route}`]);
     }
@@ -273,6 +278,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   get tienePerfilActivo(): boolean {
     return this.perfilActivo !== null;
+  }
+
+  abrirPerfilModal(): void {
+    const modalRef = this.modalService.open(PerfilModalComponent, {
+      size: 'lg',
+      backdrop: 'static'
+    });
+    
+    // Pasar el usuario actual al modal
+    modalRef.componentInstance.user = this.userInfo;
+    
+    modalRef.result.then((result) => {
+      // Manejar resultado si es necesario
+      console.log('Modal cerrado', result);
+    }).catch(() => {
+      // Modal fue cerrado/cancelado
+    });
   }
 }
 

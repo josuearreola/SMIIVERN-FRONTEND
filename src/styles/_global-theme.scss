@@ -295,6 +295,7 @@ p, span, div, label, small, li, td, th {
 }
 
 // === SCROLLBARS EN TEMA OSCURO ===
+[data-bs-theme="dark"],
 body.dark-theme {
   ::-webkit-scrollbar {
     width: 8px;
@@ -316,6 +317,7 @@ body.dark-theme {
 }
 
 // === PLACEHOLDERS EN TEMA OSCURO ===
+[data-bs-theme="dark"],
 body.dark-theme {
   ::placeholder {
     color: var(--text-muted);

@@ -8,6 +8,7 @@ import { DashboardComponent } from './dashboard.component';
 import { ModalPerfilesComponent } from '../perfilesPlantas/modal-perfiles.component';
 import { FormPerfilComponent } from '../perfilesPlantas/form-perfil.component';
 import { ConfiguracionModule } from '../configuracion/configuracion.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     declarations: [ 
@@ -22,6 +23,7 @@ import { ConfiguracionModule } from '../configuracion/configuracion.module';
         HttpClientModule,
         DashboardRoutingModule,
         ConfiguracionModule,
+        SharedModule,
     ],
     providers:[]
 

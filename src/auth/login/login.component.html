@@ -44,7 +44,7 @@
                 {{ errorMessage }}
             </div>
 
-            <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid || isLoading">
+            <button type="submit" class="btn btn-primary w-100" [disabled]="!isPasswordTouched || isLoading">
                 <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
                 {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
             </button>

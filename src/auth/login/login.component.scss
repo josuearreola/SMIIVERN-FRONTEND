@@ -118,8 +118,8 @@
     }
     
     .btn-primary {
-        background: linear-gradient(135deg, var(--primary-green), var(--dark-green, #5A6C57));
-        border: none;
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green, #5A6C57)) !important;
+            border: none !important;
         border-radius: 12px;
         padding: 0.8rem 1.5rem;
         font-size: 0.9rem;
@@ -130,16 +130,23 @@
         width: 100%;
         margin-top: 0.5rem;
         color: white !important;
+        display: block !important; // Forzar que siempre sea visible
+            visibility: visible !important;
         
-        &:hover {
+        &:hover:not(:disabled) {
             transform: translateY(-1px);
             box-shadow: 0 8px 20px rgba(133, 169, 143, 0.3);
         }
         
         &:disabled {
-            background: var(--text-disabled) !important;
-            transform: none;
-            box-shadow: none;
+            background: #6c757d !important; // Color gris fijo en lugar de variable
+                color: white !important;
+                opacity: 0.6 !important;
+                cursor: not-allowed !important;
+                transform: none !important;
+                box-shadow: none !important;
+                display: block !important; // Forzar que sea visible incluso disabled
+                visibility: visible !important;
         }
         
         .spinner-border-sm {

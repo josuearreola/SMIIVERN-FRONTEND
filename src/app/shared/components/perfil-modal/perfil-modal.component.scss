@@ -1,0 +1,467 @@
+// Imports del sistema de temas
+@use '../../../../styles/theme-variables' as theme;
+
+// Modal profesional con tema integrado
+.modal-header {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+  border-bottom: none;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.75rem 0.75rem 0 0;
+  @include theme.theme-transition;
+
+  .modal-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: white;
+    margin: 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    
+    i {
+      color: rgba(255, 255, 255, 0.9);
+      margin-right: 0.5rem;
+    }
+  }
+
+  .btn-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+    color: white;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.modal-body {
+  @include theme.modal-theme;
+  padding: 2rem 1.5rem;
+  border-radius: 0 0 0.75rem 0.75rem;
+  min-height: 280px;
+}
+
+// Vista de perfil elegante
+.profile-view {
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border-radius: 1rem;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 4px 20px var(--shadow-light);
+    position: relative;
+    overflow: hidden;
+    @include theme.theme-transition;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #85A98F, #D3F1DF);
+    }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #85A98F 0%, #D3F1DF 50%, #5A6C57 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      box-shadow: 0 6px 20px rgba(133, 169, 143, 0.3);
+      border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .user-details {
+      flex: 1;
+      
+      h5 {
+        margin: 0 0 0.5rem 0;
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--text-primary);
+        line-height: 1.2;
+        @include theme.theme-transition;
+      }
+
+      .role-badge {
+        background: linear-gradient(135deg, #85A98F, #5A6C57);
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 1.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(133, 169, 143, 0.3);
+      }
+    }
+  }
+
+  .info-section {
+    margin-bottom: 2rem;
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.5rem;
+      background: var(--bg-secondary);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border-light);
+      @include theme.theme-transition;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px var(--shadow-medium);
+        border-color: var(--primary-green);
+      }
+
+      .label {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        @include theme.theme-transition;
+      }
+
+      .value {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        font-weight: 500;
+        @include theme.theme-transition;
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+
+    .btn {
+      flex: 1;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      &:hover::before {
+        left: 100%;
+      }
+
+      &.btn-edit {
+        background: linear-gradient(135deg, #85A98F, #5A6C57);
+        color: white;
+        box-shadow: 0 4px 15px rgba(133, 169, 143, 0.4);
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(133, 169, 143, 0.6);
+        }
+      }
+
+      &.btn-password {
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+
+        &:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(108, 117, 125, 0.6);
+        }
+      }
+    }
+  }
+}
+
+// Formularios profesionales
+.edit-view, .password-view {
+  .form-header {
+    margin-bottom: 1.75rem;
+    text-align: center;
+    
+    h5 {
+      margin: 0;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+      position: relative;
+      display: inline-block;
+      @include theme.theme-transition;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-green), var(--light-green));
+        border-radius: 2px;
+      }
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    .form-group {
+      flex: 1;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      @include theme.theme-transition;
+    }
+
+    .form-control {
+      @include theme.input-theme;
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      box-shadow: 0 2px 8px var(--shadow-light);
+
+      &:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 0 0 3px rgba(133, 169, 143, 0.2);
+      }
+
+      &.is-invalid {
+        border-color: var(--error-red);
+        box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+      }
+    }
+
+    .error-msg {
+      color: var(--error-red);
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      @include theme.theme-transition;
+
+      &::before {
+        content: '⚠';
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--border-medium);
+    @include theme.theme-transition;
+
+    .btn {
+      flex: 1;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      &:hover:not(:disabled)::before {
+        left: 100%;
+      }
+
+      &.btn-cancel {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border-medium);
+        box-shadow: 0 4px 15px var(--shadow-light);
+        @include theme.theme-transition;
+
+        &:hover {
+          background: linear-gradient(135deg, #6c757d, #495057);
+          color: white;
+          border-color: #6c757d;
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+        }
+      }
+
+      &.btn-save {
+        background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+        color: white;
+        box-shadow: 0 4px 15px rgba(133, 169, 143, 0.4);
+        @include theme.theme-transition;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(133, 169, 143, 0.6);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
+      }
+    }
+  }
+}
+
+// Spinner elegante
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Responsive optimizado
+@media (max-width: 576px) {
+  .modal-body {
+    padding: 1.5rem 1rem;
+    min-height: auto;
+  }
+
+  .modal-header {
+    padding: 1rem 1.25rem;
+
+    .modal-title {
+      font-size: 1.1rem;
+    }
+  }
+
+  .profile-view {
+    .user-info {
+      padding: 1.25rem;
+      gap: 1rem;
+      
+      .avatar {
+        width: 55px;
+        height: 55px;
+        font-size: 1.3rem;
+      }
+
+      .user-details {
+        h5 {
+          font-size: 1.1rem;
+        }
+
+        .role-badge {
+          font-size: 0.75rem;
+          padding: 0.3rem 0.8rem;
+        }
+      }
+    }
+
+    .action-buttons {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .info-section {
+      .info-item {
+        padding: 0.875rem 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+
+        .label {
+          font-size: 0.85rem;
+        }
+
+        .value {
+          font-size: 0.9rem;
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .edit-view, .password-view {
+    .form-row {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .action-buttons {
+      flex-direction: column-reverse;
+      gap: 0.75rem;
+    }
+
+    .form-group {
+      .form-control {
+        padding: 0.75rem 0.875rem;
+      }
+    }
+  }
+}

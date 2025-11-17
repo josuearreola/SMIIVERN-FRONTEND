@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
     loginForm!: FormGroup;
     isLoading = false;
     errorMessage: string = '';
+    isPasswordTouched = false;
     constructor(
         private fb: FormBuilder,
         private authService: AuthService,
@@ -29,9 +30,16 @@ export class LoginComponent implements OnInit {
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required]]
         });
+        
+        // Detectar cuando el usuario empieza a escribir en el campo password
+        this.loginForm.get('password')?.valueChanges.subscribe(value => {
+            // Se habilita si hay aunque sea un carácter en password
+            this.isPasswordTouched = value && value.length > 0;
+        });
     }
     onSubmit(): void {
-        if (this.loginForm.valid){
+        // Verificar que al menos haya algo en password para permitir el submit
+        if (this.isPasswordTouched) {
             this.isLoading = true;
             this.errorMessage = '';
             

@@ -1,0 +1,155 @@
+<div class="modal-header">
+  <h4 class="modal-title">
+    <i class="fas fa-user me-2"></i>
+    Mi Perfil
+  </h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <!-- Vista de Perfil -->
+  <div *ngIf="currentView === 'profile'" class="profile-view">
+    <div class="user-info">
+      <div class="avatar">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="user-details">
+        <h5>{{ user?.nombre }} {{ user?.apellido }}</h5>
+        <span class="role-badge">{{ getTipoUsuarioDisplay(user?.tipoUsuario) }}</span>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-item">
+        <span class="label">Email:</span>
+        <span class="value">{{ user?.email }}</span>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-edit" (click)="switchView('edit')">
+        <i class="fas fa-edit me-1"></i>
+        Editar
+      </button>
+      <button class="btn btn-password" (click)="switchView('password')">
+        <i class="fas fa-key me-1"></i>
+        Contraseña
+      </button>
+    </div>
+  </div>
+
+  <!-- Vista de Edición -->
+  <div *ngIf="currentView === 'edit'" class="edit-view">
+    <div class="form-header">
+      <h5>Editar Información</h5>
+    </div>
+    
+    <form [formGroup]="perfilForm" (ngSubmit)="onSubmitProfile()">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre *</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="nombre"
+            [class.is-invalid]="perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched"
+          >
+          <div class="error-msg" *ngIf="perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched">
+            <span *ngIf="perfilForm.get('nombre')?.errors?.['required']">Requerido</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Apellido *</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="apellido"
+            [class.is-invalid]="perfilForm.get('apellido')?.invalid && perfilForm.get('apellido')?.touched"
+          >
+          <div class="error-msg" *ngIf="perfilForm.get('apellido')?.invalid && perfilForm.get('apellido')?.touched">
+            <span *ngIf="perfilForm.get('apellido')?.errors?.['required']">Requerido</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email *</label>
+        <input
+          type="email"
+          class="form-control"
+          formControlName="email"
+          [class.is-invalid]="perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched"
+        >
+        <div class="error-msg" *ngIf="perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched">
+          <span *ngIf="perfilForm.get('email')?.errors?.['required']">Requerido</span>
+          <span *ngIf="perfilForm.get('email')?.errors?.['email']">Email inválido</span>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button type="button" class="btn btn-cancel" (click)="switchView('profile')">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-save" [disabled]="perfilForm.invalid || isLoading">
+          <span *ngIf="isLoading" class="spinner"></span>
+          {{ isLoading ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Vista de Cambio de Contraseña -->
+  <div *ngIf="currentView === 'password'" class="password-view">
+    <div class="form-header">
+      <h5>Cambiar Contraseña</h5>
+    </div>
+    
+    <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+      <div class="form-group">
+        <label>Contraseña Actual *</label>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="currentPassword"
+          [class.is-invalid]="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Nueva Contraseña *</label>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="newPassword"
+          [class.is-invalid]="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched"
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Confirmar Contraseña *</label>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="confirmPassword"
+          [class.is-invalid]="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched || passwordForm.errors?.['passwordMismatch']"
+        >
+        <div class="error-msg" *ngIf="passwordForm.errors?.['passwordMismatch']">
+          Las contraseñas no coinciden
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button type="button" class="btn btn-cancel" (click)="switchView('profile')">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-save" [disabled]="passwordForm.invalid || isLoading">
+          <span *ngIf="isLoading" class="spinner"></span>
+          {{ isLoading ? 'Cambiando...' : 'Cambiar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

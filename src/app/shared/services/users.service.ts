@@ -70,4 +70,17 @@ export class UsersService {
       headers: this.getHeaders()
     });
   }
+
+  updateProfile(id: number, profileData: { nombre: string; apellido: string; email: string }): Observable<ApiResponse<Usuario>> {
+    return this.http.patch<ApiResponse<Usuario>>(`${this.apiUrl}/${id}/profile`, profileData, {
+      headers: this.getHeaders()
+    });
+  }
+
+  changePassword(id: number, currentPassword: string, newPassword: string): Observable<ApiResponse<any>> {
+    return this.http.patch<ApiResponse<any>>(`${this.apiUrl}/${id}/change-password`, 
+      { currentPassword, newPassword }, 
+      { headers: this.getHeaders() }
+    );
+  }
 }
