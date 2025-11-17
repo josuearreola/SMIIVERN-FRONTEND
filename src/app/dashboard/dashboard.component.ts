@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { TokenService } from '../../auth/services/token.service';
@@ -81,11 +81,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isDarkTheme = !this.isDarkTheme;
     console.log('Tema cambiado. isDarkTheme:', this.isDarkTheme);
   }
+
+  // Detectar clics fuera del menú hamburguesa
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    const hamburgerMenu = target.closest('.hamburger-menu');
+    const overlay = target.closest('.mobile-menu-overlay');
+    
+    // Si el clic no fue dentro del menú hamburguesa y el menú está abierto
+    // También cerrar si se hace clic en el overlay
+    if ((!hamburgerMenu || overlay) && this.showMobileMenu) {
+      this.closeMobileMenu();
+    }
+  }
+
+  // Detectar tecla Escape para cerrar el menú
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.showMobileMenu) {
+      this.closeMobileMenu();
+    }
+  }
+
+  // Prevenir scroll del body cuando el menú esté abierto (útil para PWA)
   toggleMobileMenu(): void {
     this.showMobileMenu = !this.showMobileMenu;
+    
+    // Prevenir scroll del body en PWA/móvil
+    if (this.showMobileMenu) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   }
+
   closeMobileMenu(): void {
     this.showMobileMenu = false;
+    // Restaurar scroll del body
+    document.body.style.overflow = '';
   }
 
   toggleIrrigation(): void {
