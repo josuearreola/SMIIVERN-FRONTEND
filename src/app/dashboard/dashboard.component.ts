@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subject, takeUntil, filter } from 'rxjs';
 import { TokenService } from '../../auth/services/token.service';
 import { RoleService } from '../shared/services/role.service';
 import { PerfilesPlantas, PerfilPlanta } from '../perfilesPlantas/perfiles-plantas.service';
@@ -23,7 +23,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   showPerfilesModal = false;
   perfilActivo: PerfilPlanta | null = null;
 
-  // Destroy subject para subscripciones
   private destroy$ = new Subject<void>();
 
   temperatureValue = 24.5;
@@ -50,6 +49,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.generateRandomData();
     this.startDataUpdate();
 
+    // Prevenir navegación hacia atrás
+    this.preventBackNavigation();
+
     // Suscribirse al perfil activo
     this.perfilesService.perfilActivo$.pipe(takeUntil(this.destroy$))
       .subscribe(perfil => {
@@ -60,6 +62,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private preventBackNavigation(): void {
+    // Agregar una entrada al historial para prevenir que el back button salga de la app
+    history.pushState(null, '', window.location.href);
+    
+    // Escuchar el evento popstate (cuando se presiona el botón back)
+    window.addEventListener('popstate', (event) => {
+      history.pushState(null, '', window.location.href);
+      
+      // Opcional: Mostrar confirmación antes de salir
+      // this.confirmExit();
+    });
+
+    // Escuchar cambios de ruta para mantener la sesión activa
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe((event: NavigationEnd) => {
+      // Si intentan navegar a login y están autenticados, redirigir al dashboard
+      if (event.url.includes('/login') && this.tokenService.getToken()) {
+        this.router.navigate(['/dashboard']);
+      }
+    });
+  }
+
+  private confirmExit(): void {
+    const shouldExit = confirm('¿Estás seguro de que quieres salir de SMIIVERN?');
+    if (shouldExit) {
+      this.logout();
+    }
   }
   private loadUserInfo(): void {
     this.userInfo = this.tokenService.getUserInfo();
