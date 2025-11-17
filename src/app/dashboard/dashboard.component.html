@@ -201,3 +201,7 @@
         </div>
     </main>
 </div>
+<!-- Componente Modal de Perfiles -->
+<app-modal-perfiles [show]="showPerfilesModal" (cerrarModal)="cerrarModalPerfiles()"
+    (perfilSeleccionado)="onPerfilSeleccionado($event)">
+</app-modal-perfiles>

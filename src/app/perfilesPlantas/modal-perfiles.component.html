@@ -1,0 +1,141 @@
+<!-- Modal de Perfiles de Plantas -->
+<div class="modal-backdrop" [class.show]="show" (click)="cerrar()">
+    <div class="perfiles-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>Gestión de Perfiles de Plantas</h3>
+            <button class="close-btn" (click)="cerrar()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <!-- Estado: No hay perfiles creados -->
+            <div *ngIf="perfiles.length === 0" class="empty-state">
+                <div class="empty-icon">
+                    <i class="bi bi-flower1"></i>
+                </div>
+                <h4>No hay perfiles creados</h4>
+                <p>Crea tu primer perfil de planta para comenzar el monitoreo específico</p>
+                
+                <div class="action-cards">
+                    <div class="create-card" (click)="crearNuevoPerfil()">
+                        <div class="card-icon">
+                            <i class="bi bi-plus-circle-fill"></i>
+                        </div>
+                        <h5>Crear perfil</h5>
+                        <p>Nuevo perfil personalizado</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de perfiles existentes -->
+            <div *ngIf="perfiles.length > 0" class="perfiles-list">
+                <div class="perfiles-grid">
+                    <!-- Card para crear nuevo perfil -->
+                    <div class="perfil-card create-new" (click)="crearNuevoPerfil()">
+                        <div class="card-content">
+                            <div class="card-icon">
+                                <i class="bi bi-plus-circle-fill"></i>
+                            </div>
+                            <h5>Crear nuevo</h5>
+                            <p>Agregar perfil</p>
+                        </div>
+                    </div>
+
+                    <!-- Cards de perfiles existentes -->
+                    <div *ngFor="let perfil of perfiles" 
+                         class="perfil-card" 
+                         [class.active]="perfil.id === perfilActivoId"
+                         [class.inactive]="!perfil.activo"
+                         [class.no-clickable]="!perfil.activo"
+                         (click)="seleccionarPerfil(perfil)">
+                        <div class="card-content"
+                             [attr.title]="!perfil.activo ? 'Este perfil está inactivo' : ''">
+                            <div class="card-header">
+                                <div class="perfil-info">
+                                    <h5>{{perfil.nombre}}</h5>
+                                    <span class="estado-badge" *ngIf="!perfil.activo" [class]="'estado-inactivo'">
+                                        Inactivo
+                                    </span>
+                                    <span class="tipo-planta" *ngIf="perfil.tipoPlanta">{{perfil.tipoPlanta}}</span>
+                                </div>
+                                <div class="card-actions">
+                                    <!-- Botón de reactivar solo para administradores en perfiles inactivos -->
+                                    <button *ngIf="!perfil.activo && esAdministrador()" 
+                                            class="action-btn reactivate" 
+                                            (click)="reactivarPerfil(perfil, $event)" 
+                                            title="Reactivar">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </button>
+                                    <!-- Botones de editar y eliminar solo para perfiles activos o administradores -->
+                                    <button *ngIf="perfil.activo || esAdministrador()" 
+                                            class="action-btn edit" 
+                                            (click)="editarPerfil(perfil, $event)" 
+                                            title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button *ngIf="perfil.activo || esAdministrador()" 
+                                            class="action-btn delete" 
+                                            (click)="eliminarPerfil(perfil, $event)" 
+                                            title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="perfil-params">
+                                    <div class="param-row">
+                                        <span class="param-label">Temp:</span>
+                                        <span class="param-value">{{perfil.temperaturaMin}}°-{{perfil.temperaturaMax}}°C</span>
+                                    </div>
+                                    <div class="param-row">
+                                        <span class="param-label">Humedad:</span>
+                                        <span class="param-value">{{perfil.humedadMin}}-{{perfil.humedadMax}}%</span>
+                                    </div>
+                                    <div class="param-row">
+                                        <span class="param-label">pH:</span>
+                                        <span class="param-value">{{perfil.phMin}}-{{perfil.phMax}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="perfil.id === perfilActivoId" class="active-badge">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Activo
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de formulario para crear/editar -->
+<app-form-perfil
+    [show]="showFormModal"
+    [perfilParaEditar]="perfilParaEditar"
+    (cerrarModal)="cerrarFormModal()"
+    (perfilGuardado)="onPerfilGuardado($event)">
+</app-form-perfil>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal-backdrop" [class.show]="showDeleteModal" (click)="cerrarModalEliminar()">
+    <div class="delete-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h4><i class="bi bi-exclamation-triangle text-warning"></i> Confirmar desactivación</h4>
+        </div>
+        <div class="modal-body">
+            <p>¿Estás seguro de que deseas desactivar el perfil 
+               <strong>"{{perfilParaEliminar?.nombre}}"</strong>?</p>
+          
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" (click)="cerrarModalEliminar()">
+                Cancelar
+            </button>
+            <button class="btn btn-danger" (click)="confirmarEliminacion()">
+                <i class="bi bi-check-lg"></i>
+                Desactivar perfil
+            </button>
+        </div>
+    </div>
+</div>

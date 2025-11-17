@@ -1,0 +1,179 @@
+<!-- Modal de Crear/Editar Perfil -->
+<div class="modal-backdrop" [class.show]="show" (click)="cerrar()">
+    <div class="perfil-form-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>{{ obtenerTituloModal() }}</h3>
+            <button class="close-btn" (click)="cerrar()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="perfilForm" (ngSubmit)="onSubmit()">
+                <!-- Información básica -->
+                <div class="form-section">
+                    <h4><i class="bi bi-info-circle"></i> Información Básica</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombre">Nombre del perfil *</label>
+                            <input id="nombre" type="text" formControlName="nombre" 
+                                   placeholder="Ej: Lechuga Romana" class="form-control">
+                            <div class="error-message" 
+                                 *ngIf="perfilForm.get('nombre')?.errors && perfilForm.get('nombre')?.touched">
+                                <span *ngIf="perfilForm.get('nombre')?.errors?.['required']">El nombre es requerido</span>
+                                <span *ngIf="perfilForm.get('nombre')?.errors?.['maxlength']">Máximo 100 caracteres</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipoPlanta">Tipo de planta</label>
+                            <select id="tipoPlanta" formControlName="tipoPlanta" class="form-control">
+                                <option value="">Seleccionar...</option>
+                                <option value="verdura">Verdura</option>
+                                <option value="fruta">Fruta</option>
+                                <option value="hierba">Hierba</option>
+                                <option value="legumbre">Legumbre</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="descripcion">Descripción</label>
+                            <textarea id="descripcion" formControlName="descripcion" 
+                                      placeholder="Descripción de la planta..." 
+                                      class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parámetros ambientales -->
+                <div class="form-section">
+                    <h4><i class="bi bi-thermometer-half"></i> Parámetros Ambientales</h4>
+                    
+                    <!-- Temperatura -->
+                    <div class="param-group">
+                        <label>Temperatura (°C) *</label>
+                        <div class="range-inputs">
+                            <input type="number" formControlName="temperaturaMin" 
+                                   [placeholder]="obtenerPlaceholderConValor('temperaturaMin', 'Min')" 
+                                   step="0.1" min="-50" max="100">
+                            <span>-</span>
+                            <input type="number" formControlName="temperaturaMax" 
+                                   [placeholder]="obtenerPlaceholderConValor('temperaturaMax', 'Max')" 
+                                   step="0.1" min="-50" max="100">
+                            <input type="number" formControlName="temperaturaOptima" 
+                                   [placeholder]="obtenerPlaceholderConValor('temperaturaOptima', 'Óptima')" 
+                                   step="0.1" min="-50" max="100">
+                        </div>
+                        <div class="error-message" 
+                             *ngIf="(perfilForm.get('temperaturaMin')?.errors && perfilForm.get('temperaturaMin')?.touched) || 
+                                    (perfilForm.get('temperaturaMax')?.errors && perfilForm.get('temperaturaMax')?.touched) ||
+                                    erroresRangos['temperaturaRange']">
+                            <span *ngIf="perfilForm.get('temperaturaMin')?.errors?.['required']">Temperatura mínima requerida</span>
+                            <span *ngIf="perfilForm.get('temperaturaMax')?.errors?.['required']">Temperatura máxima requerida</span>
+                            <span *ngIf="erroresRangos['temperaturaRange']">{{erroresRangos['temperaturaRange']}}</span>
+                        </div>
+                    </div>
+
+                    <!-- Humedad -->
+                    <div class="param-group">
+                        <label>Humedad (%) *</label>
+                        <div class="range-inputs">
+                            <input type="number" formControlName="humedadMin" 
+                                   [placeholder]="obtenerPlaceholderConValor('humedadMin', 'Min')" 
+                                   min="0" max="100">
+                            <span>-</span>
+                            <input type="number" formControlName="humedadMax" 
+                                   [placeholder]="obtenerPlaceholderConValor('humedadMax', 'Max')" 
+                                   min="0" max="100">
+                            <input type="number" formControlName="humedadOptima" 
+                                   [placeholder]="obtenerPlaceholderConValor('humedadOptima', 'Óptima')" 
+                                   min="0" max="100">
+                        </div>
+                        <div class="error-message" 
+                             *ngIf="(perfilForm.get('humedadMin')?.errors && perfilForm.get('humedadMin')?.touched) || 
+                                    (perfilForm.get('humedadMax')?.errors && perfilForm.get('humedadMax')?.touched) ||
+                                    erroresRangos['humedadRange']">
+                            <span *ngIf="perfilForm.get('humedadMin')?.errors?.['required']">Humedad mínima requerida</span>
+                            <span *ngIf="perfilForm.get('humedadMax')?.errors?.['required']">Humedad máxima requerida</span>
+                            <span *ngIf="erroresRangos['humedadRange']">{{erroresRangos['humedadRange']}}</span>
+                        </div>
+                    </div>
+
+                    <!-- pH -->
+                    <div class="param-group">
+                        <label>pH *</label>
+                        <div class="range-inputs">
+                            <input type="number" formControlName="phMin" 
+                                   [placeholder]="obtenerPlaceholderConValor('phMin', 'Min')" 
+                                   step="0.1" min="0" max="14">
+                            <span>-</span>
+                            <input type="number" formControlName="phMax" 
+                                   [placeholder]="obtenerPlaceholderConValor('phMax', 'Max')" 
+                                   step="0.1" min="0" max="14">
+                            <input type="number" formControlName="phOptimo" 
+                                   [placeholder]="obtenerPlaceholderConValor('phOptimo', 'Óptimo')" 
+                                   step="0.1" min="0" max="14">
+                        </div>
+                        <div class="error-message" 
+                             *ngIf="(perfilForm.get('phMin')?.errors && perfilForm.get('phMin')?.touched) || 
+                                    (perfilForm.get('phMax')?.errors && perfilForm.get('phMax')?.touched) ||
+                                    erroresRangos['phRange']">
+                            <span *ngIf="perfilForm.get('phMin')?.errors?.['required']">pH mínimo requerido</span>
+                            <span *ngIf="perfilForm.get('phMax')?.errors?.['required']">pH máximo requerido</span>
+                            <span *ngIf="erroresRangos['phRange']">{{erroresRangos['phRange']}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nutrientes NPK -->
+                <div class="form-section">
+                    <h4><i class="bi bi-droplet"></i> Nutrientes NPK (Opcional)</h4>
+                    
+                    <!-- Nitrógeno -->
+                    <div class="param-group">
+                        <label>Nitrógeno (N)</label>
+                        <div class="range-inputs">
+                            <input type="number" formControlName="nitrogenoMin" placeholder="Min" min="0">
+                            <span>-</span>
+                            <input type="number" formControlName="nitrogenoMax" placeholder="Max" min="0">
+                            <input type="number" formControlName="nitrogenoOptimo" placeholder="Óptimo" min="0">
+                        </div>
+                    </div>
+
+                    <!-- Fósforo -->
+                    <div class="param-group">
+                        <label>Fósforo (P)</label>
+                        <div class="range-inputs">
+                            <input type="number" formControlName="fosforoMin" placeholder="Min" min="0">
+                            <span>-</span>
+                            <input type="number" formControlName="fosforoMax" placeholder="Max" min="0">
+                            <input type="number" formControlName="fosforoOptimo" placeholder="Óptimo" min="0">
+                        </div>
+                    </div>
+
+                    <!-- Potasio -->
+                    <div class="param-group">
+                        <label>Potasio (K)</label>
+                        <div class="range-inputs">
+                            <input type="number" formControlName="potasioMin" placeholder="Min" min="0">
+                            <span>-</span>
+                            <input type="number" formControlName="potasioMax" placeholder="Max" min="0">
+                            <input type="number" formControlName="potasioOptimo" placeholder="Óptimo" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" (click)="cerrar()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="perfilForm.invalid || guardando">
+                        <span *ngIf="guardando" class="spinner"></span>
+                        {{ esEdicion ? 'Actualizar' : 'Crear' }} Perfil
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

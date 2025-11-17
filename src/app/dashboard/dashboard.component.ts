@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { TokenService } from '../../auth/services/token.service';
 import { RoleService } from '../shared/services/role.service';
+import { PerfilesPlantas, PerfilPlanta } from '../perfilesPlantas/perfiles-plantas.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +18,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isDarkTheme = false;
   showMobileMenu = false;
   irrigationActive = false;
+
+  // Variables para la modal de perfiles
+  showPerfilesModal = false;
+  perfilActivo: PerfilPlanta | null = null;
 
   // Destroy subject para subscripciones
   private destroy$ = new Subject<void>();
@@ -35,7 +40,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private tokenService: TokenService,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private perfilesService: PerfilesPlantas
   ) { }
   ngOnInit(): void {
     this.loadUserInfo();
@@ -43,6 +49,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.startTimeUpdate();
     this.generateRandomData();
     this.startDataUpdate();
+
+    // Suscribirse al perfil activo
+    this.perfilesService.perfilActivo$.pipe(takeUntil(this.destroy$))
+      .subscribe(perfil => {
+        this.perfilActivo = perfil;
+      });
   }
 
   ngOnDestroy(): void {
@@ -180,19 +192,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Métodos para gestión de perfiles
   abrirGestionPerfiles(): void {
     if (this.puedeCrearPerfilesActivos) {
-      console.log('Abriendo gestión de perfiles...');
-      // Aquí iría la lógica para abrir el modal o navegar
+      this.showPerfilesModal = true;
     }
   }
 
+  cerrarModalPerfiles(): void {
+    this.showPerfilesModal = false;
+  }
+
+  onPerfilSeleccionado(perfil: PerfilPlanta): void {
+    console.log('Perfil seleccionado:', perfil.nombre);
+  }
+
+  onCrearPerfil(): void {
+    console.log('Crear nuevo perfil');
+  }
+
+  onEditarPerfil(perfilId: number): void {
+    console.log('Editar perfil:', perfilId);
+  }
+
+  onEliminarPerfil(perfilId: number): void {
+    console.log('Eliminar perfil:', perfilId);
+  }
+
   get nombrePerfilActivo(): string {
-    // Por ahora retornamos un valor por defecto
-    return 'Lechuga Romana';
+    return this.perfilActivo ? this.perfilActivo.nombre : 'No seleccionado';
   }
 
   get tienePerfilActivo(): boolean {
-    // Por ahora retornamos true para mostrar el perfil
-    return true;
+    return this.perfilActivo !== null;
   }
 }
 
