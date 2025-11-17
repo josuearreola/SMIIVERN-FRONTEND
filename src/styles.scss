@@ -51,3 +51,39 @@ $warning-yellow: #F1C40F;
         border-color: $dark-green;
     }
 }
+
+// Estilos globales para mejorar PWA y móvil
+* {
+    -webkit-tap-highlight-color: transparent; // Quitar highlight azul en móvil
+    -webkit-touch-callout: none; // Quitar menu contextual en iOS
+}
+
+html, body {
+    overflow-x: hidden; // Evitar scroll horizontal
+    position: relative;
+    width: 100%;
+}
+
+// Prevenir zoom en inputs en iOS
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    font-size: 16px !important; // Previene zoom automático en iOS
+}
+
+// Estilos para PWA en pantalla completa
+@media all and (display-mode: standalone) {
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+// Mejoras para touch en móvil
+button, .btn, [role="button"] {
+    touch-action: manipulation; // Mejora el touch
+    user-select: none;
+}
