@@ -218,3 +218,6 @@
 <app-modal-perfiles [show]="showPerfilesModal" (cerrarModal)="cerrarModalPerfiles()"
     (perfilSeleccionado)="onPerfilSeleccionado($event)">
 </app-modal-perfiles>
+<!-- Modal de Configuración -->
+<app-configuracion-modal *ngIf="showConfiguracionModal" (closeModal)="closeConfiguracionModal()">
+</app-configuracion-modal>

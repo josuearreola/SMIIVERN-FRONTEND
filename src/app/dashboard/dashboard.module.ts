@@ -7,6 +7,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { ModalPerfilesComponent } from '../perfilesPlantas/modal-perfiles.component';
 import { FormPerfilComponent } from '../perfilesPlantas/form-perfil.component';
+import { ConfiguracionModule } from '../configuracion/configuracion.module';
 
 @NgModule({
     declarations: [ 
@@ -20,6 +21,7 @@ import { FormPerfilComponent } from '../perfilesPlantas/form-perfil.component';
         ReactiveFormsModule,
         HttpClientModule,
         DashboardRoutingModule,
+        ConfiguracionModule,
     ],
     providers:[]
 

@@ -24,6 +24,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   showPerfilesModal = false;
   perfilActivo: PerfilPlanta | null = null;
 
+  // Variable para modal de configuración
+  showConfiguracionModal = false;
+
   private destroy$ = new Subject<void>();
 
   temperatureValue = 24.5;
@@ -128,10 +131,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
   navigateTo(route: string): void {
-    this.router.navigate([`/dashboard/${route}`]);
+    if (route === 'settings') {
+      this.showConfiguracionModal = true;
+    } else {
+      this.router.navigate([`/dashboard/${route}`]);
+    }
   }
   toggleTheme(): void {
     this.themeService.toggleTheme();
+  }
+
+  closeConfiguracionModal(): void {
+    this.showConfiguracionModal = false;
   }
 
   // Detectar clics fuera del menú hamburguesa

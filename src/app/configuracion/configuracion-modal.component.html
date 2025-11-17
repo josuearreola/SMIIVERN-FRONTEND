@@ -1,0 +1,96 @@
+<div class="modal-backdrop" (click)="onCloseModal()">
+  <div class="configuracion-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="header-left">
+        <i class="bi bi-gear-fill"></i>
+        <h2>Configuración del Sistema</h2>
+      </div>
+      <button class="close-btn" type="button" (click)="onCloseModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="section-header">
+        <i class="bi bi-people-fill"></i>
+        <h3>Gestión de Usuarios</h3>
+        
+      </div>
+
+      <div *ngIf="error" class="error-message">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        {{ error }}
+      </div>
+
+      <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <span>Cargando usuarios...</span>
+      </div>
+
+      <div *ngIf="!loading && usuarios.length > 0" class="users-table-container">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre Completo</th>
+              <th>Email</th>
+              <th>Tipo de Usuario</th>
+              <th>Estado</th>
+              <th>Fecha de Registro</th>
+              <th>Última Actualización</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios; trackBy: trackByUserId">
+              <td class="id-cell">{{ usuario.id }}</td>
+              <td class="name-cell">
+                <div class="user-name">
+                  <span class="nombre">{{ usuario.nombre }}</span>
+                  <span class="apellido">{{ usuario.apellido }}</span>
+                </div>
+              </td>
+              <td class="email-cell">{{ usuario.email }}</td>
+              <td class="tipo-cell">
+                <select 
+                  [value]="usuario.tipoUsuario" 
+                  (change)="onUserTypeChange(usuario, $event)"
+                  [disabled]="loading"
+                  class="tipo-select"
+                  [class]="'tipo-' + usuario.tipoUsuario">
+                  <option value="administrador" class="option-admin">Administrador</option>
+                  <option value="estudiante" class="option-estudiante">Estudiante</option>
+                  <option value="mantenimiento" class="option-mantenimiento">Mantenimiento</option>
+                </select>
+              </td>
+              <td class="status-cell">
+                <span class="status-badge" [class]="getStatusClass(usuario.activo)">
+                  <i class="bi" [class]="usuario.activo ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                  {{ getStatusText(usuario.activo) }}
+                </span>
+              </td>
+              <td class="date-cell">{{ formatDate(usuario.fechaCreacion) }}</td>
+              <td class="date-cell">{{ formatDate(usuario.fechaActualizacion) }}</td>
+              <td class="actions-cell">
+                <button 
+                  class="action-btn" 
+                  [class]="getActionClass(usuario.activo)"
+                  (click)="toggleUserStatus(usuario)"
+                  [disabled]="loading">
+                  <i class="bi" [class]="usuario.activo ? 'bi-person-x' : 'bi-person-check'"></i>
+                  {{ getActionText(usuario.activo) }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!loading && usuarios.length === 0" class="empty-state">
+        <i class="bi bi-people"></i>
+        <h3>No hay usuarios registrados</h3>
+        <p>Aún no se han registrado usuarios en el sistema.</p>
+      </div>
+    </div>
+  </div>
+</div>
