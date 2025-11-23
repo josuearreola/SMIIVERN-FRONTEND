@@ -11,8 +11,8 @@
     grid-template-columns: 1fr;
     height: 100vh;
     background-color: var(--bg-secondary);
-    position: relative;
-    @include theme.theme-transition;
+        position: relative;
+        @include theme.theme-transition;
 }
 
 // Overlay para cerrar menú móvil
@@ -27,7 +27,7 @@
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
-
+    
     &.show {
         opacity: 1;
         visibility: visible;
@@ -37,13 +37,13 @@
 .dashboard-header {
     grid-area: header;
     background: var(--bg-primary);
-    color: var(--text-primary);
+        color: var(--text-primary);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 2rem;
     border-bottom: 1px solid var(--border-light);
-    box-shadow: 0 2px 4px var(--shadow-light);
+        box-shadow: 0 2px 4px var(--shadow-light);
     z-index: 1000;
     @include theme.theme-transition;
 
@@ -85,12 +85,11 @@
                 font-weight: 600;
                 text-transform: lowercase;
                 @include theme.theme-transition;
-
                 &.sin-perfil {
                     color: var(--text-muted);
-                    font-style: italic;
-                    text-transform: none;
-                }
+                        font-style: italic;
+                        text-transform: none;
+                    }
             }
 
             .profile-edit-icon {
@@ -189,8 +188,8 @@
             align-items: center;
             gap: 0.3rem;
             background: var(--light-green, #D3F1DF);
-            border: 1px solid var(--primary-green);
-            color: var(--primary-green);
+                border: 1px solid var(--primary-green);
+                color: var(--primary-green);
             padding: 0.3rem 1.5rem;
             border-radius: 8px;
             cursor: pointer;
@@ -252,8 +251,8 @@
 
                 &:hover {
                     background: var(--light-green, #D3F1DF);
-                    color: var(--primary-green);
-                    border-color: var(--primary-green);
+                        color: var(--primary-green);
+                        border-color: var(--primary-green);
                 }
 
                 i {
@@ -302,62 +301,61 @@
                     cursor: pointer;
                     transition: all 0.2s ease;
                     border-bottom: 1px solid var(--border-light);
-                    color: var(--text-primary) !important;
+                        color: var(--text-primary) !important;
                     font-size: 0.85rem;
 
                     &.theme-toggle-mobile {
-                        justify-content: space-between;
-
-                        .mobile-theme-switch {
-                            display: flex;
-                            align-items: center;
-                            gap: 0.5rem;
-
-                            i {
-                                font-size: 0.8rem;
-                                color: var(--text-disabled);
-                                transition: color 0.3s ease;
-
-                                &.active {
-                                    &.bi-sun-fill {
-                                        color: #ffa500;
-                                    }
-
-                                    &.bi-moon-fill {
-                                        color: #4169e1;
+                            justify-content: space-between;
+                    
+                            .mobile-theme-switch {
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                    
+                                i {
+                                    font-size: 0.8rem;
+                                    color: var(--text-disabled);
+                                    transition: color 0.3s ease;
+                    
+                                    &.active {
+                                        &.bi-sun-fill {
+                                            color: #ffa500;
+                                        }
+                    
+                                        &.bi-moon-fill {
+                                            color: #4169e1;
+                                        }
                                     }
                                 }
-                            }
-
-                            .mobile-switch {
-                                position: relative;
-                                width: 35px;
-                                height: 18px;
-                                background: #e0e0e0;
-                                border-radius: 10px;
-                                cursor: pointer;
-                                transition: background 0.3s ease;
-
-                                .mobile-switch-slider {
-                                    position: absolute;
-                                    top: 1px;
-                                    left: 1px;
-                                    width: 16px;
-                                    height: 16px;
-                                    background: white;
-                                    border-radius: 50%;
-                                    transition: transform 0.3s ease;
-                                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-
-                                    &.dark {
-                                        transform: translateX(17px);
-                                        background: #333;
+                    
+                                .mobile-switch {
+                                    position: relative;
+                                    width: 35px;
+                                    height: 18px;
+                                    background: #e0e0e0;
+                                    border-radius: 10px;
+                                    cursor: pointer;
+                                    transition: background 0.3s ease;
+                    
+                                    .mobile-switch-slider {
+                                        position: absolute;
+                                        top: 1px;
+                                        left: 1px;
+                                        width: 16px;
+                                        height: 16px;
+                                        background: white;
+                                        border-radius: 50%;
+                                        transition: transform 0.3s ease;
+                                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+                    
+                                        &.dark {
+                                            transform: translateX(17px);
+                                            background: #333;
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-
                     &:first-child {
                         border-radius: 12px 12px 0 0;
                     }
@@ -380,12 +378,10 @@
                             background: var(--error-bg-light) !important;
                             color: #c82333 !important;
                         }
-
                         i {
                             color: #dc3545 !important;
                         }
-
-                        span {
+                        span{
                             color: #dc3545 !important;
                         }
                     }
@@ -442,13 +438,13 @@
 
                 &:hover {
                     color: var(--primary-green);
-                    background: rgba(var(--light-green, #D3F1DF), 0.3);
+                        background: rgba(var(--light-green, #D3F1DF), 0.3);
                 }
 
                 &.active {
                     color: var(--primary-green);
-                    border-bottom-color: var(--primary-green);
-                    background: rgba(var(--light-green, #D3F1DF), 0.2);
+                        border-bottom-color: var(--primary-green);
+                        background: rgba(var(--light-green, #D3F1DF), 0.2);
                     font-weight: 600;
                 }
 
@@ -469,86 +465,84 @@
     overflow-y: auto;
     padding: 0.8rem;
     background-color: var(--bg-secondary);
-    @include theme.theme-transition;
+        @include theme.theme-transition;
 }
 
 // Layout para desktop (por defecto)
 .dashboard-content {
     display: grid;
     grid-template-columns: 1fr 1.2fr; // Columna derecha un poco más ancha para sensores
-    gap: 1rem; // Reducir gap de 1.5rem a 1rem
-    max-width: 1400px;
-    margin: 0 auto;
+        gap: 1rem; // Reducir gap de 1.5rem a 1rem
+        max-width: 1400px;
+        margin: 0 auto;
     height: calc(100vh - 120px); // Aumentar espacio restado
-    padding: 1rem; // Reducir padding
-
+        padding: 1rem; // Reducir padding
     .left-column,
-    .right-column {
-        display: flex;
-        flex-direction: column;
+        .right-column {
+            display: flex;
+            flex-direction: column;
         gap: 0.75rem; // Reducir gap entre cards
-    }
-
-    .left-column {
-
-        // Control y Alertas en columna izquierda
-        .control-section,
-        .alerts-section {
-            @include theme.card-theme;
-            border-radius: var(--border-radius-lg, 12px);
-            padding: 1rem;
-            box-shadow: var(--shadow-medium);
         }
-    }
-
-    .right-column {
-
-        // Monitoreo ocupa toda la columna derecha
-        .monitoring-section {
-            @include theme.card-theme;
-            border-radius: var(--border-radius-lg, 12px);
-            padding: 1.5rem;
-            box-shadow: 0 2px 10px var(--shadow-light);
-            height: 100%;
+        
+        .left-column {
+        
+            // Control y Alertas en columna izquierda
+            .control-section,
+            .alerts-section {
+                @include theme.card-theme;
+                    border-radius: var(--border-radius-lg, 12px);
+                    padding: 1rem;
+                    box-shadow: var(--shadow-medium);
+            }
         }
-    }
-
-    .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 0.5rem; // Reducir de 0.6rem a 0.5rem
-
-        .header-left {
+        
+        .right-column {
+        
+            // Monitoreo ocupa toda la columna derecha
+            .monitoring-section {
+                @include theme.card-theme;
+                    border-radius: var(--border-radius-lg, 12px);
+                padding: 1.5rem;
+                box-shadow: 0 2px 10px var(--shadow-light);
+                height: 100%;
+            }
+        }
+        
+        .section-header {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: space-between;
+            margin-bottom: 0.5rem; // Reducir de 0.6rem a 0.5rem
+            
+            .header-left {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            i {
+                color: var(--primary-green);
+                font-size: 1.2rem;
+            }
+            
+            h3, h4 {
+                margin: 0;
+                color: var(--text-primary);
+                font-weight: 600;
+                @include theme.theme-transition;
+            }
         }
-
-        i {
-            color: var(--primary-green);
-            font-size: 1.2rem;
-        }
-
-        h3,
-        h4 {
-            margin: 0;
-            color: var(--text-primary);
-            font-weight: 600;
-            @include theme.theme-transition;
-        }
-    }
-
-    .control-section,
-    .alerts-section,
-    .monitoring-section {
-        @include theme.card-theme;
-        border-radius: var(--border-radius-lg, 12px);
-        padding: 1.5rem;
-        box-shadow: 0 2px 10px var(--shadow-light);
-        height: 100%;
-    }
-}
+        
+        .control-section,
+        .alerts-section,
+        .monitoring-section {
+            @include theme.card-theme;
+                border-radius: var(--border-radius-lg, 12px);
+                padding: 1.5rem;
+            box-shadow: 0 2px 10px var(--shadow-light);
+                height: 100%;
+            }
+            }
 
 // Media query para móviles medianos (hasta 640px)
 @media (max-width: 640px) {
@@ -556,76 +550,75 @@
         .header-left .app-title {
             font-size: 1.4rem;
         }
-
+        
         .header-center .profile-status {
             padding: 0.4rem 0.8rem;
             font-size: 0.75rem;
         }
-
+        
         .header-right {
             gap: 0.5rem;
-
+            
             .theme-switch-container {
                 .theme-icon {
                     font-size: 1rem;
                 }
-
+                
                 .theme-switch {
                     width: 40px;
                     height: 20px;
                 }
             }
-
+            
             .reports-btn {
                 padding: 0.5rem 0.8rem;
                 font-size: 0.8rem;
             }
         }
     }
-
-    // Solo cambiar a 1 columna en móviles pequeños
+    
+        // Solo cambiar a 1 columna en móviles pequeños
     .dashboard-main .dashboard-content {
         padding: 0.75rem;
         gap: 0.75rem;
         height: auto; // Altura automática en móvil
-    }
-}
-
-// Media query para tablets (mantener 2 columnas)
-@media (min-width: 769px) and (max-width: 1024px) {
-    .dashboard-content {
-        grid-template-columns: 1fr 1fr; // Columnas iguales en tablet
-        gap: 1rem;
-    }
-
-    // Ocultar toggle de tema del menú hamburguesa en tablet
-    .mobile-menu-dropdown .theme-toggle-mobile {
-        display: none !important;
-    }
-
-    // Mostrar theme-switch en tablet
-    .dashboard-header .header-right .theme-switch-container {
-        display: flex !important;
-        align-items: center;
-        gap: 0.6rem;
-    }
-
-    // Mantener nutrientes horizontales pero más compactos en tablet
-    .nutrients-gauges {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0.5rem;
-
-        .gauge-item {
-            .gauge-circle {
-                width: 50px;
-                height: 25px;
-
-                .gauge-fill {
-                    width: 50px;
-                    height: 50px;
-                }
-            }
         }
+        }
+        
+        // Media query para tablets (mantener 2 columnas)
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .dashboard-content {
+                grid-template-columns: 1fr 1fr; // Columnas iguales en tablet
+                gap: 1rem;
+            }
+                        // Ocultar toggle de tema del menú hamburguesa en tablet
+                        .mobile-menu-dropdown .theme-toggle-mobile {
+                            display: none !important;
+                        }
+            
+                        // Mostrar theme-switch en tablet
+                        .dashboard-header .header-right .theme-switch-container {
+                            display: flex !important;
+                            align-items: center;
+                            gap: 0.6rem;
+                        }
+        
+            // Mantener nutrientes horizontales pero más compactos en tablet
+            .nutrients-gauges {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+        
+                .gauge-item {
+                    .gauge-circle {
+                        width: 50px;
+                        height: 25px;
+        
+                        .gauge-fill {
+                            width: 50px;
+                            height: 50px;
+                        }
+                    }
+                }
     }
 }
 
@@ -634,52 +627,51 @@
         grid-template-rows: 60px 1fr; // Reducir altura del header
     }
 
-    // SOLO aquí cambiar a 1 columna (móvil)
-    .dashboard-main .dashboard-content {
-        grid-template-columns: 1fr !important;
-        height: auto;
-        padding: 1rem;
-        gap: 1rem;
-    }
-
-    // Cambiar nutrientes a vertical en móvil
-    .nutrients-gauges {
-        grid-template-columns: 1fr !important; // Una sola columna en móvil
-        gap: 1rem !important;
-
-        .gauge-item {
-            .gauge-circle {
-                width: 80px; // Hacer más grandes en móvil
-                height: 40px;
-
-                .gauge-fill {
-                    width: 80px;
-                    height: 80px;
+        // SOLO aquí cambiar a 1 columna (móvil)
+        .dashboard-main .dashboard-content {
+            grid-template-columns: 1fr !important;
+            height: auto;
+            padding: 1rem;
+            gap: 1rem;
+        }
+    
+        // Cambiar nutrientes a vertical en móvil
+        .nutrients-gauges {
+            grid-template-columns: 1fr !important; // Una sola columna en móvil
+            gap: 1rem !important;
+    
+            .gauge-item {
+                .gauge-circle {
+                    width: 80px; // Hacer más grandes en móvil
+                    height: 40px;
+    
+                    .gauge-fill {
+                        width: 80px;
+                        height: 80px;
+                    }
                 }
             }
         }
-    }
-
     .dashboard-header {
         padding: 0 0.75rem;
-
+        
         .header-left .app-title {
             font-size: 1.3rem;
         }
-
+        
         .header-center {
             flex: 1;
             margin: 0 0.5rem;
-
+            
             .profile-status {
                 padding: 0.3rem 0.6rem;
                 font-size: 0.7rem;
                 min-width: 0; // Permitir que se encoja
-
+                
                 .profile-label {
                     display: none;
                 }
-
+                
                 .profile-name {
                     white-space: nowrap;
                     overflow: hidden;
@@ -688,128 +680,127 @@
                 }
             }
         }
-
+        
         .header-right {
             gap: 0.25rem;
-
+            
             .last-update {
                 display: none;
             }
-
+            
             .theme-switch-container {
                 display: none; // Ocultar en móvil muy pequeño
             }
-
+            
             .reports-btn {
                 padding: 0.4rem 0.6rem;
                 font-size: 0.7rem;
-
+                
                 span {
                     display: none; // Solo mostrar icono
                 }
             }
-
+            
             .hamburger-menu {
                 .hamburger-btn {
                     padding: 0.4rem;
                 }
             }
-
-            height: 20px;
-
-            .switch-slider {
-                width: 16px;
-                height: 16px;
-
-                &.dark {
-                    transform: translateX(20px);
+                    height: 20px;
+                    
+                    .switch-slider {
+                        width: 16px;
+                        height: 16px;
+                        
+                        &.dark {
+                            transform: translateX(20px);
+                        }
+                    }
                 }
             }
-        }
-    }
-
-    .reports-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.7rem;
-
-        span {
-            display: none;
-        }
-    }
-
-    .hamburger-menu {
-        .hamburger-btn {
-            width: 40px;
-            height: 36px;
-        }
-
-        .mobile-menu-dropdown {
-            right: -10px;
-            min-width: 160px;
-
-            &::before {
-                right: 20px;
-            }
-
-            .menu-item {
-                padding: 0.7rem 1rem;
-                font-size: 0.8rem;
-
-                i {
-                    font-size: 0.9rem;
-                }
-
+            
+            .reports-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.7rem;
+                
                 span {
-                    font-size: 0.8rem;
+                    display: none;
+                }
+            }
+            
+            .hamburger-menu {
+                .hamburger-btn {
+                    width: 40px;
+                    height: 36px;
+                }
+                
+                .mobile-menu-dropdown {
+                    right: -10px;
+                    min-width: 160px;
+                    
+                    &::before {
+                        right: 20px;
+                    }
+                    
+                    .menu-item {
+                        padding: 0.7rem 1rem;
+                        font-size: 0.8rem;
+                        
+                        i {
+                            font-size: 0.9rem;
+                        }
+                        
+                        span {
+                            font-size: 0.8rem;
+                        }
+                    }
                 }
             }
         }
+    
+    
+    // Estilos responsive para el contenido del dashboard
+    .dashboard-main .dashboard-content {
+        grid-template-columns: 1fr; // Una sola columna en móvil/tablet
+        gap: 1rem;
+        padding: 1rem;
+        height: auto; // Altura automática en móvil
     }
-}
-
-
-// Estilos responsive para el contenido del dashboard
-.dashboard-main .dashboard-content {
-    grid-template-columns: 1fr; // Una sola columna en móvil/tablet
-    gap: 1rem;
-    padding: 1rem;
-    height: auto; // Altura automática en móvil
-}
-
-.nutrients-gauges {
-    grid-template-columns: 1fr !important;
-    gap: 1rem !important;
-}
-
-.irrigation-control .irrigation-btn {
-    .btn-circle {
-        width: 60px;
-        height: 60px;
-
-        i {
-            font-size: 1.5rem;
+    
+    .nutrients-gauges {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .irrigation-control .irrigation-btn {
+        .btn-circle {
+            width: 60px;
+            height: 60px;
+            
+            i {
+                font-size: 1.5rem;
+            }
+        }
+        
+        span {
+            font-size: 0.75rem;
+            max-width: 100px;
         }
     }
-
-    span {
-        font-size: 0.75rem;
-        max-width: 100px;
+    
+    .alerts-content .alert-item {
+        padding: 0.5rem 0.6rem;
+        gap: 0.5rem;
+        
+        i {
+            font-size: 0.9rem;
+        }
+        
+        .alert-label,
+        .alert-text {
+            font-size: 0.75rem;
+        }
     }
-}
-
-.alerts-content .alert-item {
-    padding: 0.5rem 0.6rem;
-    gap: 0.5rem;
-
-    i {
-        font-size: 0.9rem;
-    }
-
-    .alert-label,
-    .alert-text {
-        font-size: 0.75rem;
-    }
-}
 
 
 // Estilos para el contenido del dashboard
@@ -818,7 +809,7 @@
     justify-content: center;
     align-items: center;
     padding: 0.5rem 0; // Reducir de 1rem a 0.5rem
-
+    
     .irrigation-btn {
         display: flex;
         flex-direction: column;
@@ -828,34 +819,34 @@
         border: none;
         cursor: pointer;
         transition: all 0.3s ease;
-
+        
         .btn-circle {
             width: 50px;
-            height: 50px;
+                height: 50px;
             border-radius: 50%;
             background: var(--bg-tertiary);
-            border: 2px solid var(--border-medium);
+                border: 2px solid var(--border-medium);
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-
+            
             i {
                 font-size: 1.5rem;
                 color: var(--text-secondary);
             }
         }
-
+        
         &.active .btn-circle {
             background: var(--primary-green);
-            border-color: var(--primary-green);
-            box-shadow: 0 0 20px rgba(133, 169, 143, 0.4);
-
-            i {
-                color: white;
-            }
+                border-color: var(--primary-green);
+                box-shadow: 0 0 20px rgba(133, 169, 143, 0.4);
+            
+                i {
+                    color: white;
+                }
         }
-
+        
         span {
             font-size: 0.85rem;
             font-weight: 600;
@@ -870,7 +861,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-
+    
     .alert-item {
         display: flex;
         align-items: center;
@@ -878,47 +869,47 @@
         padding: 0.5rem 0.8rem;
         border-radius: 6px;
         border-left: 4px solid;
-
+        
         &.warning {
             background: var(--warning-bg-light);
-            border-left-color: var(--warning-yellow, #F39C12);
-            color: var(--text-primary) !important;
-
+                border-left-color: var(--warning-yellow, #F39C12);
+                color: var(--text-primary) !important;
+            
             i {
                 color: var(--warning-yellow, #F39C12);
             }
         }
-
+        
         &.error {
             background: var(--error-bg-light);
-            border-left-color: var(--error-red, #E74C3C);
-            color: var(--text-primary) !important;
-
+                border-left-color: var(--error-red, #E74C3C);
+                color: var(--text-primary) !important;
+            
             i {
                 color: var(--error-red, #E74C3C);
             }
         }
-
+        
         &.info {
             background: var(--info-bg-light);
-            border-left-color: var(--info-blue, #1976d2);
-            color: var(--text-primary) !important;
-
+                border-left-color: var(--info-blue, #1976d2);
+                color: var(--text-primary) !important;
+            
             i {
                 color: var(--info-blue, #1976d2);
             }
         }
-
+        
         i {
             font-size: 1rem;
             flex-shrink: 0;
         }
-
+        
         .alert-label {
             font-weight: 600;
             font-size: 0.8rem;
         }
-
+        
         .alert-text {
             font-size: 0.8rem;
             line-height: 1.3;
@@ -934,103 +925,14 @@
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
-
+    
     &:hover {
         color: var(--dark-green, #5A6C57);
         text-decoration: underline;
     }
-
+    
     i {
         font-size: 1rem;
-    }
-}
-
-// Mensaje cuando no hay perfil seleccionado
-.no-profile-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 1.5rem;
-    text-align: center;
-    background: var(--bg-secondary);
-    border: 2px dashed var(--border-medium);
-    border-radius: 1rem;
-    margin: 1rem 0;
-
-    .no-profile-icon {
-        font-size: 3rem;
-        color: var(--warning-yellow, #F1C40F);
-        margin-bottom: 1rem;
-        opacity: 0.8;
-    }
-
-    h4 {
-        color: var(--text-primary);
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        font-size: 1.2rem;
-    }
-
-    p {
-        color: var(--text-secondary);
-        margin-bottom: 1.5rem;
-        font-size: 0.95rem;
-        max-width: 400px;
-        line-height: 1.4;
-    }
-
-    .btn-select-profile {
-        background: var(--primary-green);
-        color: white;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 0.75rem;
-        font-weight: 600;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-
-        &:hover {
-            background: var(--dark-green, #5A6C57);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(133, 169, 143, 0.4);
-        }
-
-        i {
-            font-size: 1rem;
-        }
-    }
-}
-
-// Responsive para mensaje de no perfil
-@media (max-width: 768px) {
-    .no-profile-message {
-        padding: 2rem 1rem;
-        margin: 0.5rem 0;
-
-        .no-profile-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.4rem;
-        }
-
-        p {
-            font-size: 0.9rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .btn-select-profile {
-            padding: 0.6rem 1.2rem;
-            font-size: 0.85rem;
-        }
     }
 }
 
@@ -1045,7 +947,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-
+    
     .sensor-item {
         label {
             display: block;
@@ -1053,35 +955,35 @@
             color: var(--text-primary);
             margin-bottom: 0.3rem; // Reducir de 0.5rem a 0.3rem
         }
-
+        
         .progress-bar {
             position: relative;
             width: 100%;
             height: 18px;
             background: var(--bg-tertiary);
-            border: 1px solid var(--border-light);
+                border: 1px solid var(--border-light);
             border-radius: 10px;
             overflow: hidden;
-
+            
             .progress-fill {
                 height: 100%;
                 border-radius: 15px;
                 transition: width 0.5s ease;
                 position: relative;
-
+                
                 &.temperature {
                     background: linear-gradient(90deg, #dc3545 0%, #ffc107 50%, #28a745 100%);
                 }
-
+                
                 &.humidity {
                     background: linear-gradient(90deg, #dc3545 0%, #ffc107 50%, #28a745 100%);
                 }
-
+                
                 &.ph {
                     background: linear-gradient(90deg, #dc3545 0%, #ffc107 50%, #28a745 100%);
                 }
             }
-
+            
             .progress-value {
                 position: absolute;
                 top: 50%;
@@ -1098,12 +1000,12 @@
                 box-shadow: 0 2px 4px var(--progress-value-shadow, rgba(0, 0, 0, 0.1));
             }
         }
-
+        
         .progress-labels {
             display: flex;
             justify-content: space-between;
             margin-top: 0.3rem;
-
+            
             span {
                 font-size: 0.75rem;
                 color: var(--text-secondary) !important;
@@ -1116,17 +1018,16 @@
     .nutrients-header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         gap: 0.5rem;
         margin-bottom: 1rem;
-        padding: 0.5rem 0 0.3rem;
-        border-bottom: 1px solid var(--border-light);
-
+            padding: 0.5rem 0 0.3rem;
+            border-bottom: 1px solid var(--border-light);
+        
         i {
             color: var(--primary-green);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
-
+        
         h4 {
             margin: 0;
             font-size: 1.1rem;
@@ -1134,361 +1035,127 @@
             color: var(--text-primary) !important;
         }
     }
-
-    .nutrients-legend {
-        display: flex;
-        gap: 0.5rem;
-        font-size: 0.7rem;
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 500;
-
-            &.danger {
-                background: rgba(220, 53, 69, 0.1);
-                color: #dc3545;
-                border: 1px solid rgba(220, 53, 69, 0.3);
-            }
-
-            &.warning {
-                background: rgba(255, 193, 7, 0.1);
-                color: #ffc107;
-                border: 1px solid rgba(255, 193, 7, 0.3);
-            }
-
-            &.optimal {
-                background: rgba(40, 167, 69, 0.1);
-                color: #28a745;
-                border: 1px solid rgba(40, 167, 69, 0.3);
-            }
-        }
-    }
-}
-
-.nutrients-gauges {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    padding: 0.5rem;
-
-    .gauge-item {
-        display: flex;
-        flex-direction: column;
+    
+    .nutrients-gauges {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         gap: 0.8rem;
-        padding: 1rem 0.8rem;
-        border-radius: 12px;
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-light);
-        transition: all 0.3s ease;
-
-        &:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
-            border-color: var(--primary-color);
-        }
-
-        .nutrient-info {
-            text-align: center;
-
-            h5 {
-                margin: 0 0 0.3rem 0;
-                font-size: 0.9rem;
-                font-weight: 700;
-                color: var(--text-primary);
-            }
-
-            .nutrient-description {
-                margin: 0;
-                font-size: 0.7rem;
-                color: var(--text-secondary);
-                font-style: italic;
-            }
-        }
-
-        .gauge-container {
+            padding: 0.5rem;
+        
+        .gauge-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
-
+            gap: 0.6rem;
+                padding: 0.8rem 0.3rem;
+                border-radius: 12px;
+                background: var(--bg-secondary);
+                border: 1px solid var(--border-light);
+                transition: all 0.3s ease;
+            
+                &:hover {
+                    transform: translateY(-2px);
+                    box-shadow: var(--shadow-medium);
+                }
+            
             .gauge-circle {
                 position: relative;
-                width: 80px;
-                height: 40px;
+                width: 70px;
+                    height: 35px;
                 overflow: hidden;
-
+                
                 .gauge-fill {
-                    width: 80px;
-                    height: 80px;
+                    width: 70px;
+                        height: 70px;
                     border-radius: 50%;
-                    background: conic-gradient(from 0deg,
-                            #dc3545 0deg,
-                            #ffc107 60deg,
-                            #28a745 120deg,
-                            #28a745 180deg,
-                            var(--bg-tertiary) 180deg,
-                            var(--bg-tertiary) 360deg);
+                    background: conic-gradient(
+                        from 0deg,
+                        #dc3545 0deg,
+                        #ffc107 60deg,
+                        #28a745 120deg,
+                        #28a745 180deg,
+                        var(--bg-tertiary) 180deg,
+                            var(--bg-tertiary) 360deg
+                    );
                     position: relative;
-
+                    
                     &::after {
                         content: '';
                         position: absolute;
-                        top: 14px;
-                        left: 14px;
-                        width: 52px;
-                        height: 52px;
-                        background: var(--bg-primary);
+                        top: 12px;
+                            left: 12px;
+                            width: 46px;
+                            height: 46px;
+                            background: var(--bg-primary);
                         border-radius: 50%;
                         border: 2px solid var(--border-light);
                     }
                 }
-
+                
                 .gauge-value {
                     position: absolute;
-                    top: 55%;
+                    top: 50%;
                     left: 50%;
                     transform: translate(-50%, -50%);
                     font-weight: 700;
-                    font-size: 1rem;
+                        font-size: 0.9rem;
+                        color: var(--text-primary) !important;
+                        z-index: 10;
+                        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+                }
+            }
+            
+            label {
+                font-size: 0.85rem;
+                    font-weight: 600;
                     color: var(--text-primary) !important;
-                    z-index: 10;
-                    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-
-                    // Agregar marcadores de referencia visual
-                    &::before {
-                        content: '';
-                        position: absolute;
-                        top: 0;
-                        left: 10%;
-                        width: 2px;
-                        height: 8px;
-                        background: #dc3545;
-                        border-radius: 1px;
-                        z-index: 5;
-
-                        &::after {
-                            content: '';
-                            position: absolute;
-                            top: 0;
-                            right: 10%;
-                            width: 2px;
-                            height: 8px;
-                            background: #dc3545;
-                            border-radius: 1px;
-                            z-index: 5;
-                        }
-                    }
-
-                    .gauge-status {
-                        display: flex;
-                        align-items: center;
-                        gap: 4px;
-                        font-size: 0.75rem;
-                        font-weight: 600;
-                        padding: 4px 8px;
-                        border-radius: 6px;
-                        min-height: 24px;
-
-                        &.optimal {
-                            background: rgba(40, 167, 69, 0.1);
-                            color: #28a745;
-                            border: 1px solid rgba(40, 167, 69, 0.3);
-                        }
-
-                        &.warning {
-                            background: rgba(255, 193, 7, 0.1);
-                            color: #ffc107;
-                            border: 1px solid rgba(255, 193, 7, 0.3);
-                        }
-
-                        &.danger {
-                            background: rgba(220, 53, 69, 0.1);
-                            color: #dc3545;
-                            border: 1px solid rgba(220, 53, 69, 0.3);
-                        }
-
-                        i {
-                            font-size: 0.8rem;
-                        }
-                    }
-                }
-
-                .nutrient-ranges {
-                    display: flex;
-                    justify-content: space-between;
-                    gap: 0.3rem;
-                    margin-top: 0.2rem;
-
-                    .range-item {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        font-size: 0.65rem;
-                        padding: 3px 6px;
-                        border-radius: 4px;
-                        background: var(--bg-tertiary);
-                        border: 1px solid var(--border-light);
-                        min-width: 35px;
-
-                        &.optimal {
-                            background: rgba(40, 167, 69, 0.1);
-                            border-color: rgba(40, 167, 69, 0.3);
-
-                            .range-label {
-                                color: #28a745;
-                                font-weight: 600;
-                            }
-
-                            .range-value {
-                                color: #28a745;
-                                font-weight: 700;
-                            }
-                        }
-
-                        .range-label {
-                            color: var(--text-secondary);
-                            font-weight: 500;
-                            margin-bottom: 1px;
-                        }
-
-                        .range-value {
-                            color: var(--text-primary);
-                            font-weight: 600;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Responsive design
-        @media (max-width: 768px) {
-            .nutrients-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-
-                .nutrients-legend {
-                    align-self: stretch;
-                    justify-content: center;
-                }
-            }
-
-            .nutrients-gauges {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-
-                .gauge-item {
-                    .gauge-container .gauge-circle {
-                        width: 90px;
-                        height: 45px;
-
-                        .gauge-fill {
-                            width: 90px;
-                            height: 90px;
-                        }
-                    }
-                }
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .nutrients-gauges {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.8rem;
-
-                .gauge-item {
-                    padding: 0.8rem 0.5rem;
-
-                    .gauge-container .gauge-circle {
-                        width: 70px;
-                        height: 35px;
-
-                        .gauge-fill {
-                            width: 70px;
-                            height: 70px;
-                        }
-                    }
-                }
+                text-align: center;
+                line-height: 1.2;
+                margin-top: 0.5rem;
             }
         }
     }
+}
+// Asegurar layout de 2 columnas en desktop
+@media (min-width: 1025px) {
+    .dashboard-content {
+        grid-template-columns: 1fr 1.2fr !important;
+        height: calc(100vh - 130px) !important; // Aumentar espacio restado
+    }
 
-    // Asegurar layout de 2 columnas en desktop
-    @media (min-width: 1025px) {
-        .dashboard-content {
-            grid-template-columns: 1fr 1.2fr !important;
-            height: calc(100vh - 130px) !important; // Aumentar espacio restado
-        }
+    .dashboard-main .dashboard-content {
+        grid-template-columns: 1fr 1.2fr !important;
+        padding: 1.5rem; // Reducir de 2rem a 1.5rem
+        gap: 1rem; // Reducir de 1.5rem a 1rem
+    }
 
-        .dashboard-main .dashboard-content {
-            grid-template-columns: 1fr 1.2fr !important;
-            padding: 1.5rem; // Reducir de 2rem a 1.5rem
-            gap: 1rem; // Reducir de 1.5rem a 1rem
-        }
+                // Mostrar theme-switch en desktop
+                .dashboard-header .header-right .theme-switch-container {
+                    display: flex !important;
+                    align-items: center;
+                    gap: 0.8rem;
+                }
+                
+                // Ocultar toggle de tema del menú hamburguesa en desktop
+                .mobile-menu-dropdown .theme-toggle-mobile {
+                    display: none !important;
+                }
+    // Optimizar nutrientes para desktop - horizontal y compacto
+    .nutrients-gauges {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 0.5rem !important;
+        margin-top: 0.5rem;
 
-        // Mostrar theme-switch en desktop
-        .dashboard-header .header-right .theme-switch-container {
-            display: flex !important;
-            align-items: center;
-            gap: 0.8rem;
-        }
+        .gauge-item {
+            gap: 0.3rem;
 
-        // Ocultar toggle de tema del menú hamburguesa en desktop
-        .mobile-menu-dropdown .theme-toggle-mobile {
-            display: none !important;
-        }
+            .gauge-circle {
+                width: 60px;
+                height: 30px;
 
-        // Optimizar nutrientes para desktop - mantener diseño mejorado
-        .nutrients-section {
-            .nutrients-gauges {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.8rem !important;
-
-                .gauge-item {
-                    padding: 0.8rem 0.5rem !important;
-                    gap: 0.5rem !important;
-
-                    .nutrient-info {
-                        h5 {
-                            font-size: 0.85rem !important;
-                        }
-
-                        .nutrient-description {
-                            font-size: 0.65rem !important;
-                        }
-                    }
-
-                    .gauge-container {
-                        .gauge-circle {
-                            width: 70px !important;
-                            height: 35px !important;
-
-                            .gauge-fill {
-                                width: 70px !important;
-                                height: 70px !important;
-                            }
-
-                            .gauge-value {
-                                font-size: 0.9rem !important;
-                            }
-                        }
-
-                        .gauge-status {
-                            font-size: 0.7rem !important;
-                            padding: 3px 6px !important;
-                        }
-                    }
-
-                    .nutrient-ranges {
-                        .range-item {
-                            font-size: 0.6rem !important;
-                            padding: 2px 4px !important;
-                            min-width: 28px !important;
-                        }
-                    }
+                .gauge-fill {
+                    width: 60px;
+                    height: 60px;
                 }
             }
         }
