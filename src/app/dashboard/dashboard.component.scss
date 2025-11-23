@@ -936,6 +936,94 @@
     }
 }
 
+// Mensaje cuando no hay perfil seleccionado
+.no-profile-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    background: var(--bg-secondary);
+    border: 2px dashed var(--border-medium);
+    border-radius: 1rem;
+    margin: 1rem 0;
+
+    .no-profile-icon {
+        font-size: 3rem;
+        color: var(--warning-yellow, #F1C40F);
+        margin-bottom: 1rem;
+        opacity: 0.8;
+    }
+
+    h4 {
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+        max-width: 400px;
+        line-height: 1.4;
+    }
+
+    .btn-select-profile {
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &:hover {
+            background: var(--dark-green, #5A6C57);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(133, 169, 143, 0.4);
+        }
+
+        i {
+            font-size: 1rem;
+        }
+    }
+}
+
+// Responsive para mensaje de no perfil
+@media (max-width: 768px) {
+    .no-profile-message {
+        padding: 2rem 1rem;
+        margin: 0.5rem 0;
+
+        .no-profile-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .btn-select-profile {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+        }
+    }
+}
 .sensors-content {
     display: flex;
     flex-direction: column;
@@ -1018,14 +1106,15 @@
     .nutrients-header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 0.5rem;
         margin-bottom: 1rem;
-            padding: 0.5rem 0 0.3rem;
+        padding: 0.5rem 0 0.3rem;
             border-bottom: 1px solid var(--border-light);
         
         i {
             color: var(--primary-green);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
         
         h4 {
@@ -1034,84 +1123,282 @@
             font-weight: 600;
             color: var(--text-primary) !important;
         }
+.nutrients-legend {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 500;
+
+        &.danger {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+
+        &.warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        &.optimal {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+    }
+}
     }
     
     .nutrients-gauges {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 0.8rem;
+        gap: 1rem;
             padding: 0.5rem;
         
         .gauge-item {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 0.6rem;
-                padding: 0.8rem 0.3rem;
+            gap: 0.8rem;
+                padding: 1rem 0.8rem;
                 border-radius: 12px;
                 background: var(--bg-secondary);
                 border: 1px solid var(--border-light);
                 transition: all 0.3s ease;
             
-                &:hover {
+            &:hover {
                     transform: translateY(-2px);
                     box-shadow: var(--shadow-medium);
-                }
-            
-            .gauge-circle {
-                position: relative;
-                width: 70px;
-                    height: 35px;
-                overflow: hidden;
-                
-                .gauge-fill {
-                    width: 70px;
-                        height: 70px;
-                    border-radius: 50%;
-                    background: conic-gradient(
-                        from 0deg,
-                        #dc3545 0deg,
-                        #ffc107 60deg,
-                        #28a745 120deg,
-                        #28a745 180deg,
-                        var(--bg-tertiary) 180deg,
-                            var(--bg-tertiary) 360deg
-                    );
-                    position: relative;
-                    
-                    &::after {
-                        content: '';
-                        position: absolute;
-                        top: 12px;
-                            left: 12px;
-                            width: 46px;
-                            height: 46px;
-                            background: var(--bg-primary);
-                        border-radius: 50%;
-                        border: 2px solid var(--border-light);
-                    }
+                border-color: var(--primary-color);
                 }
                 
-                .gauge-value {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    font-weight: 700;
+                .nutrient-info {
+                    text-align: center;
+                
+                    h5 {
+                        margin: 0 0 0.3rem 0;
                         font-size: 0.9rem;
+                        font-weight: 700;
+                        color: var(--text-primary);
+                }
+
+                                .nutrient-description {
+                                    margin: 0;
+                                    font-size: 0.7rem;
+                                    color: var(--text-secondary);
+                                    font-style: italic;
+                                }
+                                }
+                
+                                .gauge-container {
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    gap: 0.5rem;
+                .gauge-circle {
+                        position: relative;
+                    width: 80px;
+                        height: 40px;
+                        overflow: hidden;
+                    
+                        .gauge-fill {
+                        width: 80px;
+                            height: 80px;
+                            border-radius: 50%;
+                            background: conic-gradient(from 0deg,
+                                    #dc3545 0deg,
+                                    #ffc107 60deg,
+                                    #28a745 120deg,
+                                    #28a745 180deg,
+                                    var(--bg-tertiary) 180deg,
+                            var(--bg-tertiary) 360deg
+                        );
+                            position: relative;
+                        
+                            &::after {
+                                content: '';
+                                position: absolute;
+                            top: 14px;
+                                left: 14px;
+                                width: 52px;
+                                height: 52px;
+                            background: var(--bg-primary);
+                            border-radius: 50%;
+                                border: 2px solid var(--border-light);
+                            }
+                            }
+                            
+                            .gauge-value {
+                                position: absolute;
+                        top: 55%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            font-weight: 700;
+                        font-size: 1rem;
                         color: var(--text-primary) !important;
                         z-index: 10;
                         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-                }
-            }
-            
-            label {
-                font-size: 0.85rem;
+                    
+// Agregar marcadores de referencia visual
+&::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 2px;
+    height: 8px;
+    background: #dc3545;
+    border-radius: 1px;
+    z-index: 5;
+                    
+                                        &::after {
+                                            content: '';
+                                            position: absolute;
+                                            top: 0;
+                                            right: 10%;
+                                            width: 2px;
+                                            height: 8px;
+                                            background: #dc3545;
+                                            border-radius: 1px;
+                                            z-index: 5;
+                                        }
+                                        }
+                    
+                                        .gauge-status {
+                                            display: flex;
+                                            align-items: center;
+                                            gap: 4px;
+                                            font-size: 0.75rem;
                     font-weight: 600;
-                    color: var(--text-primary) !important;
-                text-align: center;
-                line-height: 1.2;
-                margin-top: 0.5rem;
+                    padding: 4px 8px;
+                        border-radius: 6px;
+                        min-height: 24px;
+                    
+                        &.optimal {
+                            background: rgba(40, 167, 69, 0.1);
+                            color: #28a745;
+                            border: 1px solid rgba(40, 167, 69, 0.3);
+                        }
+                    
+                        &.warning {
+                            background: rgba(255, 193, 7, 0.1);
+                            color: #ffc107;
+                            border: 1px solid rgba(255, 193, 7, 0.3);
+                        }
+                    
+                        &.danger {
+                            background: rgba(220, 53, 69, 0.1);
+                            color: #dc3545;
+                            border: 1px solid rgba(220, 53, 69, 0.3);
+                        }
+                    
+                        i {
+                            font-size: 0.8rem;
+                        }
+                    }
+                    }
+                    
+                    .nutrient-ranges {
+                        display: flex;
+                        justify-content: space-between;
+                        gap: 0.3rem;
+                        margin-top: 0.2rem;
+                    
+                        .range-item {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            font-size: 0.65rem;
+                            padding: 3px 6px;
+                            border-radius: 4px;
+                            background: var(--bg-tertiary);
+                            border: 1px solid var(--border-light);
+                            min-width: 35px;
+                    
+                            &.optimal {
+                                background: rgba(40, 167, 69, 0.1);
+                                border-color: rgba(40, 167, 69, 0.3);
+                    
+                                .range-label {
+                                    color: #28a745;
+                                    font-weight: 600;
+                                }
+                    
+                                .range-value {
+                                    color: #28a745;
+                                    font-weight: 700;
+                                }
+                            }
+                    
+                            .range-label {
+                                color: var(--text-secondary);
+                                font-weight: 500;
+                                margin-bottom: 1px;
+                            }
+                    
+                            .range-value {
+                                color: var(--text-primary);
+                                font-weight: 600;
+                            }
+                        }
+                    }
+                    }
+                    }
+                    
+                    // Responsive design
+                    @media (max-width: 768px) {
+                        .nutrients-header {
+                            flex-direction: column;
+                            align-items: flex-start;
+                            gap: 0.5rem;
+                    
+                            .nutrients-legend {
+                                align-self: stretch;
+                                justify-content: center;
+                            }
+                        }
+                    
+                        .nutrients-gauges {
+                            grid-template-columns: 1fr;
+                            gap: 1rem;
+                    
+                            .gauge-item {
+                                .gauge-container .gauge-circle {
+                                    width: 90px;
+                                    height: 45px;
+                    
+                                    .gauge-fill {
+                                        width: 90px;
+                                        height: 90px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    @media (min-width: 769px) and (max-width: 1024px) {
+                        .nutrients-gauges {
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 0.8rem;
+                    
+                            .gauge-item {
+                                padding: 0.8rem 0.5rem;
+                    
+                                .gauge-container .gauge-circle {
+                                    width: 70px;
+                                    height: 35px;
+                    
+                                    .gauge-fill {
+                                        width: 70px;
+                                        height: 70px;
+                                    }
+                                }
             }
         }
     }
@@ -1140,22 +1427,51 @@
                 .mobile-menu-dropdown .theme-toggle-mobile {
                     display: none !important;
                 }
-    // Optimizar nutrientes para desktop - horizontal y compacto
-    .nutrients-gauges {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 0.5rem !important;
-        margin-top: 0.5rem;
+        // Optimizar nutrientes para desktop - mantener diseño mejorado
+        .nutrients-section {
+            .nutrients-gauges {
+                grid-template-columns: repeat(3, 1fr) !important;
+            gap: 0.8rem !important;
+            
+                .gauge-item {
+                    padding: 0.8rem 0.5rem !important;
+                gap: 0.5rem !important;
+.nutrient-info {
+        h5 {
+            font-size: 0.85rem !important;
+        }
 
-        .gauge-item {
-            gap: 0.3rem;
+                                        .nutrient-description {
+                                            font-size: 0.65rem !important;
+                                        }
+                                        }
+                                .gauge-container {
+                    .gauge-circle {
+                        width: 70px !important;
+                            height: 35px !important;
 
-            .gauge-circle {
-                width: 60px;
-                height: 30px;
-
-                .gauge-fill {
-                    width: 60px;
-                    height: 60px;
+                        .gauge-fill {
+                            width: 70px !important;
+                                height: 70px !important;
+                            }
+                            
+                            .gauge-value {
+                                font-size: 0.9rem !important;
+                            }
+                            }
+                            
+                            .gauge-status {
+                                font-size: 0.7rem !important;
+                                padding: 3px 6px !important;
+                            }
+                            }
+                            
+                            .nutrient-ranges {
+                                .range-item {
+                                    font-size: 0.6rem !important;
+                                    padding: 2px 4px !important;
+                                    min-width: 28px !important;
+                                }
                 }
             }
         }

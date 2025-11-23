@@ -134,7 +134,21 @@
                             Ver historial
                         </a>
                     </div>
-                    <div class="sensors-content">
+                    <!-- Mensaje cuando no hay perfil seleccionado -->
+                    <div *ngIf="!tienePerfilActivo" class="no-profile-message">
+                        <div class="no-profile-icon">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+                        <h4>No hay perfil de planta seleccionado</h4>
+                        <p>Selecciona un perfil de planta para ver el monitoreo de sensores específico.</p>
+                        <button class="btn-select-profile" (click)="abrirModalPerfiles()">
+                            <i class="bi bi-flower1"></i>
+                            Seleccionar Perfil
+                        </button>
+                    </div>
+                    
+                    <!-- Contenido de sensores solo cuando hay perfil activo -->
+                    <div *ngIf="tienePerfilActivo" class="sensors-content">
                         <div class="progress-sensors">
                             <div class="sensor-item">
                                 <label>Temperatura</label>
@@ -143,9 +157,9 @@
                                     <span class="progress-value">{{ temperatureValue }}°C</span>
                                 </div>
                                 <div class="progress-labels">
-                                    <span>10°C</span>
-                                    <span>22°C</span>
-                                    <span>30°C</span>
+                                    <span>{{temperatureMin}}°C</span>
+                                    <span>{{temperatureOptimal}}°C</span>
+                                    <span>{{temperatureMax}}°C</span>
                                 </div>
                             </div>
 
@@ -156,9 +170,9 @@
                                     <span class="progress-value">{{ humidityValue }}%</span>
                                 </div>
                                 <div class="progress-labels">
-                                    <span>40%</span>
-                                    <span>65%</span>
-                                    <span>80%</span>
+                                    <span>{{humidityMin}}%</span>
+                                    <span>{{humidityOptimal}}%</span>
+                                    <span>{{humidityMax}}%</span>
                                 </div>
                             </div>
                             <div class="sensor-item">
@@ -168,43 +182,114 @@
                                     <span class="progress-value">{{ phValue }}</span>
                                 </div>
                                 <div class="progress-labels">
-                                    <span>5.0</span>
-                                    <span>6.5</span>
-                                    <span>7.5</span>
+                                    <span>{{phMin}}</span>
+                                    <span>{{phOptimal}}</span>
+                                    <span>{{phMax}}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="nutrients-section">
                             <div class="nutrients-header">
-                                <i class="bi bi-circle"></i>
+                                <i class="bi bi-droplet-half"></i>
                                 <h4>Nutrientes (NPK)</h4>
+                                <div class="nutrients-legend">
+                                    <span class="legend-item danger">Bajo/Alto</span>
+                                    <span class="legend-item warning">Moderado</span>
+                                    <span class="legend-item optimal">Óptimo</span>
+                                </div>
                             </div>
                             <div class="nutrients-gauges">
                                 <div class="gauge-item">
-                                    <div class="gauge-circle">
-                                        <div class="gauge-fill nitrogen"
-                                            [style.background]="getGaugeBackground(nitrogenValue)"></div>
-                                        <div class="gauge-value">{{ nitrogenValue }}%</div>
+                                    <div class="nutrient-info">
+                                        <h5>Nitrógeno (N)</h5>
+                                        <p class="nutrient-description">Crecimiento y hojas verdes</p>
                                     </div>
-                                    <label>Nitrógeno (N)</label>
+                                    <div class="gauge-container">
+                                        <div class="gauge-circle">
+                                            <div class="gauge-fill nitrogen" [style.background]="getGaugeBackground(nitrogenValue)"></div>
+                                            <div class="gauge-value">{{ nitrogenValue }}</div>
+                                            </div>
+                                            <div class="gauge-status" [ngClass]="getNutrientStatus('nitrogen')">
+                                                <i [class]="getNutrientIcon('nitrogen')"></i>
+                                                <span>{{ getNutrientStatusText('nitrogen') }}</span>
+                                            </div>
+                                            </div>
+                                            <div class="nutrient-ranges">
+                                                <div class="range-item">
+                                                    <span class="range-label">Mín:</span>
+                                                    <span class="range-value">{{nitrogenMin}}</span>
+                                                </div>
+                                                <div class="range-item optimal">
+                                                    <span class="range-label">Ideal:</span>
+                                                    <span class="range-value">{{nitrogenOptimal}}</span>
+                                                </div>
+                                                <div class="range-item">
+                                                    <span class="range-label">Máx:</span>
+                                                    <span class="range-value">{{nitrogenMax}}</span>
+                                                </div>
+                                    </div>
                                 </div>
 
                                 <div class="gauge-item">
-                                    <div class="gauge-circle">
-                                        <div class="gauge-fill phosphorus"
-                                            [style.background]="getGaugeBackground(phosphorusValue)"></div>
-                                        <div class="gauge-value">{{ phosphorusValue }}%</div>
+                                    <div class="nutrient-info">
+                                        <h5>Fósforo (P)</h5>
+                                        <p class="nutrient-description">Raíces y floración</p>
                                     </div>
-                                    <label>Fósforo (P)</label>
+                                    <div class="gauge-container">
+                                        <div class="gauge-circle">
+                                            <div class="gauge-fill phosphorus" [style.background]="getGaugeBackground(phosphorusValue)"></div>
+                                            <div class="gauge-value">{{ phosphorusValue }}</div>
+                                            </div>
+                                            <div class="gauge-status" [ngClass]="getNutrientStatus('phosphorus')">
+                                                <i [class]="getNutrientIcon('phosphorus')"></i>
+                                                <span>{{ getNutrientStatusText('phosphorus') }}</span>
+                                            </div>
+                                            </div>
+                                            <div class="nutrient-ranges">
+                                                <div class="range-item">
+                                                    <span class="range-label">Mín:</span>
+                                                    <span class="range-value">{{phosphorusMin}}</span>
+                                                </div>
+                                                <div class="range-item optimal">
+                                                    <span class="range-label">Ideal:</span>
+                                                    <span class="range-value">{{phosphorusOptimal}}</span>
+                                                </div>
+                                                <div class="range-item">
+                                                    <span class="range-label">Máx:</span>
+                                                    <span class="range-value">{{phosphorusMax}}</span>
+                                                </div>
+                                    </div>
                                 </div>
 
                                 <div class="gauge-item">
-                                    <div class="gauge-circle">
-                                        <div class="gauge-fill potassium"
-                                            [style.background]="getGaugeBackground(potassiumValue)"></div>
-                                        <div class="gauge-value">{{ potassiumValue }}%</div>
+                                    <div class="nutrient-info">
+                                        <h5>Potasio (K)</h5>
+                                        <p class="nutrient-description">Resistencia y frutos</p>
                                     </div>
-                                    <label>Potasio (K)</label>
+                                    <div class="gauge-container">
+                                        <div class="gauge-circle">
+                                            <div class="gauge-fill potassium" [style.background]="getGaugeBackground(potassiumValue)"></div>
+                                            <div class="gauge-value">{{ potassiumValue }}</div>
+                                            </div>
+                                            <div class="gauge-status" [ngClass]="getNutrientStatus('potassium')">
+                                                <i [class]="getNutrientIcon('potassium')"></i>
+                                                <span>{{ getNutrientStatusText('potassium') }}</span>
+                                            </div>
+                                            </div>
+                                            <div class="nutrient-ranges">
+                                                <div class="range-item">
+                                                    <span class="range-label">Mín:</span>
+                                                    <span class="range-value">{{potassiumMin}}</span>
+                                                </div>
+                                                <div class="range-item optimal">
+                                                    <span class="range-label">Ideal:</span>
+                                                    <span class="range-value">{{potassiumOptimal}}</span>
+                                                </div>
+                                                <div class="range-item">
+                                                    <span class="range-label">Máx:</span>
+                                                    <span class="range-value">{{potassiumMax}}</span>
+                                                </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
