@@ -8,8 +8,17 @@
             </button>
         </div>
         <div class="modal-body">
+            <!-- Estado: Cargando perfiles -->
+            <div *ngIf="cargandoPerfiles" class="loading-state">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <h4>Cargando perfiles</h4>
+                <p>Obteniendo la información de perfiles de plantas...</p>
+            </div>
+
             <!-- Estado: No hay perfiles creados -->
-            <div *ngIf="perfiles.length === 0" class="empty-state">
+            <div *ngIf="!cargandoPerfiles && perfiles.length === 0" class="empty-state">
                 <div class="empty-icon">
                     <i class="bi bi-flower1"></i>
                 </div>
@@ -28,7 +37,7 @@
             </div>
 
             <!-- Lista de perfiles existentes -->
-            <div *ngIf="perfiles.length > 0" class="perfiles-list">
+            <div *ngIf="!cargandoPerfiles && perfiles.length > 0" class="perfiles-list">
                 <div class="perfiles-grid">
                     <!-- Card para crear nuevo perfil -->
                     <div class="perfil-card create-new" (click)="crearNuevoPerfil()">
@@ -66,14 +75,14 @@
                                             title="Reactivar">
                                         <i class="bi bi-arrow-clockwise"></i>
                                     </button>
-                                    <!-- Botones de editar y eliminar solo para perfiles activos o administradores -->
-                                    <button *ngIf="perfil.activo || esAdministrador()" 
+                                    <!-- Botones de editar y eliminar solo para perfiles activos -->
+                                    <button *ngIf="perfil.activo"
                                             class="action-btn edit" 
                                             (click)="editarPerfil(perfil, $event)" 
                                             title="Editar">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <button *ngIf="perfil.activo || esAdministrador()" 
+                                    <button *ngIf="perfil.activo"
                                             class="action-btn delete" 
                                             (click)="eliminarPerfil(perfil, $event)" 
                                             title="Eliminar">
@@ -135,6 +144,29 @@
             <button class="btn btn-danger" (click)="confirmarEliminacion()">
                 <i class="bi bi-check-lg"></i>
                 Desactivar perfil
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Modal de confirmación para reactivar -->
+<div class="modal-backdrop" [class.show]="showReactivateModal" (click)="cerrarModalReactivar()">
+    <div class="reactivate-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h4><i class="bi bi-arrow-clockwise text-success"></i> Confirmar reactivación</h4>
+        </div>
+        <div class="modal-body">
+            <p>¿Estás seguro de que deseas reactivar el perfil
+                <strong>"{{perfilParaReactivar?.nombre}}"</strong>?
+            </p>
+            <p class="text-muted">Este perfil volverá a estar disponible para seleccionar y usar en el sistema.</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" (click)="cerrarModalReactivar()">
+                Cancelar
+            </button>
+            <button class="btn btn-success" (click)="confirmarReactivacion()">
+                <i class="bi bi-arrow-clockwise"></i>
+                Reactivar perfil
             </button>
         </div>
     </div>

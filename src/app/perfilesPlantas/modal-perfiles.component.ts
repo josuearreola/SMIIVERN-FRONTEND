@@ -17,14 +17,19 @@ export class ModalPerfilesComponent implements OnInit, OnDestroy, OnChanges {
   perfiles: PerfilPlanta[] = [];
   perfilActivo: PerfilPlanta | null = null;
   private subscriptions: Subscription[] = [];
+  cargandoPerfiles: boolean = false;
 
   // Variables para el formulario
   showFormModal: boolean = false;
   perfilParaEditar: PerfilPlanta | null = null;
 
-  // Variables para modal de confirmación
+  // Variables para modal de confirmación de eliminación
   showDeleteModal: boolean = false;
   perfilParaEliminar: PerfilPlanta | null = null;
+
+  // Variables para modal de confirmación de reactivación
+  showReactivateModal: boolean = false;
+  perfilParaReactivar: PerfilPlanta | null = null;
 
   constructor(private perfilesService: PerfilesPlantas, private roleService: RoleService) {}
 
@@ -32,6 +37,7 @@ export class ModalPerfilesComponent implements OnInit, OnDestroy, OnChanges {
     // Suscribirse a los perfiles
     const perfilesSub = this.perfilesService.perfiles$.subscribe(perfiles => {
       this.perfiles = perfiles;
+      this.cargandoPerfiles = false; // Terminar loading cuando lleguen los perfiles
     });
 
     // Suscribirse al perfil activo
@@ -45,6 +51,8 @@ export class ModalPerfilesComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     // Cargar perfiles solo cuando se abre la modal
     if (changes['show'] && changes['show'].currentValue === true) {
+      this.cargandoPerfiles = true;
+      this.perfiles = []; // Limpiar perfiles mientras carga
       this.perfilesService.cargarPerfiles();
       this.perfilesService.cargarPerfilActivoGuardado();
     }
@@ -135,12 +143,23 @@ export class ModalPerfilesComponent implements OnInit, OnDestroy, OnChanges {
 
   reactivarPerfil(perfil: PerfilPlanta, event: Event) {
     event.stopPropagation();
-    
-    if (confirm(`¿Deseas reactivar el perfil "${perfil.nombre}"?`)) {
-      this.perfilesService.reactivar(perfil.id).subscribe({
+    this.perfilParaReactivar = perfil;
+    this.showReactivateModal = true;
+  }
+
+  // Métodos para modal de reactivación
+  cerrarModalReactivar() {
+    this.showReactivateModal = false;
+    this.perfilParaReactivar = null;
+  }
+
+  confirmarReactivacion() {
+    if (this.perfilParaReactivar) {
+      this.perfilesService.reactivar(this.perfilParaReactivar.id).subscribe({
         next: () => {
           console.log('Perfil reactivado exitosamente');
           this.perfilesService.cargarPerfiles();
+          this.cerrarModalReactivar();
         },
         error: (error) => {
           console.error('Error al reactivar perfil:', error);
