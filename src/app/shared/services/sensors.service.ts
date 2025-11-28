@@ -78,11 +78,11 @@ export class SensorsService {
   }
 
   /**
-   * Inicia el polling automático para actualizar datos cada 2 segundos
+   * Inicia el polling automático para actualizar datos cada 1 segundo
    */
   private startPolling(): void {
-    // Actualizar cada 2 segundos
-    timer(0, 2000).pipe(
+    // Actualizar cada 1 segundo para mayor dinamismo
+    timer(0, 1000).pipe(
       switchMap(() => this.getLatestSensorData('esp32-001')),
       tap(data => {
         this.latestDataSubject.next(data);

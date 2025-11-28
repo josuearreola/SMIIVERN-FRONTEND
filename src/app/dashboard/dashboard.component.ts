@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subject, takeUntil, filter } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -106,7 +106,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private sensorsService: SensorsService,
     private reportService: ReportService,
-    public alertService: AlertService
+    public alertService: AlertService,
+    private cdr: ChangeDetectorRef
   ) { }
   ngOnInit(): void {
     // Inicializar el observable de alertas
@@ -214,7 +215,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     setInterval(() => {
       this.updateTime();
 
-    }, 1000);
+    }, 500); // Actualizar cada 500ms para mayor dinamismo
   }
 
   toggleSidebar(): void {
@@ -348,6 +349,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     // Generar alertas basadas en los valores actuales
     this.generateAlerts();
+
+    // Forzar detección de cambios para actualización inmediata de gráficas
+    this.cdr.detectChanges();
 
     console.log('Valores de sensores actualizados desde API:', {
       temperature: this.temperatureValue,
