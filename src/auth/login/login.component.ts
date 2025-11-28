@@ -49,7 +49,12 @@ export class LoginComponent implements OnInit {
                     this.router.navigate(['/dashboard'])
                 },
                 error: (error) =>{
-                    this.errorMessage = error.error?.message || 'Error al iniciar sesion';
+                    // Manejar específicamente el error de cuenta bloqueada
+                    if (error.status === 401 && error.error?.message?.includes('bloqueada')) {
+                        this.errorMessage = 'Tu cuenta ha sido bloqueada por múltiples intentos fallidos. Contacta al administrador para reactivarla.';
+                    } else {
+                        this.errorMessage = error.error?.message || 'Error al iniciar sesión';
+                    }
                     this.isLoading = false;
                 },
                 complete: () => {
