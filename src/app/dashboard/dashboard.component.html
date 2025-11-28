@@ -101,22 +101,23 @@
                     <div class="section-header">
                         <i class="bi bi-bell"></i>
                         <h3>Alertas Activas</h3>
+                        <span class="alert-count" *ngIf="activeAlerts.length > 0">({{activeAlerts.length}})</span>
                     </div>
                     <div class="alerts-content">
-                        <div class="alert-item warning">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                            <span class="alert-label">Advertencia</span>
-                            <span class="alert-text">Niverl de Fósforo (P) bajo.</span>
+                        <div *ngIf="activeAlerts.length === 0" class="no-alerts">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>No hay alertas activas</span>
                         </div>
-                        <div class="alert-item error">
-                            <i class="bi bi-x-circle-fill"></i>
-                            <span class="alert-label">Error</span>
-                            <span class="alert-text">Falla en el sensor de ph</span>
-                        </div>
-                        <div class="alert-item info">
-                            <i class="bi bi-info-circle-fill"></i>
-                            <span class="alert-label">Info</span>
-                            <span class="alert-text">Proximo ciclo de riego en 2 horas</span>
+                        <div *ngFor="let alert of activeAlerts" class="alert-item" [ngClass]="alert.type">
+                            <i class="bi" [ngClass]="{
+                                                         'bi-exclamation-triangle-fill': alert.type === 'warning',
+                                                         'bi-x-circle-fill': alert.type === 'error',
+                                                         'bi-info-circle-fill': alert.type === 'info'
+                                                       }"></i>
+                            <span class="alert-label">{{alert.type === 'warning' ? 'Advertencia' : (alert.type === 'error' ? 'Error' :
+                                'Info')}}</span>
+                            <span class="alert-text">{{alert.message}}</span>
+                            <small class="alert-time">{{alert.timestamp | date:'HH:mm:ss'}}</small>
                         </div>
                     </div>
                 </div>
@@ -135,6 +136,20 @@
                         </a>
                     </div>
                     <div class="sensors-content">
+                        <!-- Indicador de estado de conexión con sensores -->
+                        <div *ngIf="!sensorDataAvailable" class="sensor-status-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <span>Sin datos de sensores. Verificar conexión con ESP32.</span>
+                            <button class="refresh-btn" (click)="refreshSensorData()">
+                                <i class="bi bi-arrow-clockwise"></i>
+                                Reintentar
+                            </button>
+                        </div>
+                        
+                        <!-- Datos de sensores en tiempo real -->
+                        <div class="sensor-timestamp" *ngIf="latestSensorData">
+                            <small>Última lectura: {{ latestSensorData.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</small>
+                        </div>
                         <div class="progress-sensors">
                             <div class="sensor-item">
                                 <label>Temperatura</label>
@@ -156,9 +171,9 @@
                                     <span class="progress-value">{{ humidityValue }}%</span>
                                 </div>
                                 <div class="progress-labels">
-                                    <span>{{humidityMin}}%</span>
-                                    <span>{{humidityOptimal}}%</span>
-                                    <span>{{humidityMax}}%</span>
+                                    <span>0%</span>
+                                    <span>{{humidityOptimal}}% (óptimo)</span>
+                                    <span>100%</span>
                                 </div>
                             </div>
                             <div class="sensor-item">
@@ -187,6 +202,7 @@
                                         <div class="gauge-value">{{ nitrogenValue }}%</div>
                                     </div>
                                     <label>Nitrógeno (N)</label>
+                                    <div class="gauge-raw-value">{{ nitrogenRawValue }} mg/kg</div>
                                 </div>
 
                                 <div class="gauge-item">
@@ -196,6 +212,7 @@
                                         <div class="gauge-value">{{ phosphorusValue }}%</div>
                                     </div>
                                     <label>Fósforo (P)</label>
+                                    <div class="gauge-raw-value">{{ phosphorusRawValue }} mg/kg</div>
                                 </div>
 
                                 <div class="gauge-item">
@@ -205,6 +222,7 @@
                                         <div class="gauge-value">{{ potassiumValue }}%</div>
                                     </div>
                                     <label>Potasio (K)</label>
+                                    <div class="gauge-raw-value">{{ potassiumRawValue }} mg/kg</div>
                                 </div>
                             </div>
                         </div>

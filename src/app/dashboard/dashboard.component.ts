@@ -7,6 +7,17 @@ import { RoleService } from '../shared/services/role.service';
 import { PerfilesPlantas, PerfilPlanta } from '../perfilesPlantas/perfiles-plantas.service';
 import { ThemeService } from '../core/services/theme.service';
 import { PerfilModalComponent } from '../shared/components/perfil-modal/perfil-modal.component';
+import { SensorsService, SensorData } from '../shared/services/sensors.service';
+
+export interface Alert {
+  id: string;
+  type: 'warning' | 'error' | 'info';
+  sensor: string;
+  message: string;
+  value: number;
+  range: { min: number; max: number; optimal?: number };
+  timestamp: Date;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -42,13 +53,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
   phosphorusValue = 30;
   potassiumValue = 50;
 
+  // Valores originales en mg/kg para mostrar en UI
+  nitrogenRawValue = 0;
+  phosphorusRawValue = 0;
+  potassiumRawValue = 0;
+
+  // Sistema de alertas
+  activeAlerts: Alert[] = [];
+
   // Rangos dinámicos basados en el perfil seleccionado
   temperatureMin = 10;
   temperatureMax = 30;
   temperatureOptimal = 22;
-  humidityMin = 40;
-  humidityMax = 80;
-  humidityOptimal = 65;
+  humidityMin = 50;  // Rangos más realistas para humedad
+  humidityMax = 95;
+  humidityOptimal = 70;
   phMin = 5.0;
   phMax = 7.5;
   phOptimal = 6.5;
@@ -66,20 +85,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
   tienePerfilActivo = false;
   private subscriptions: any[] = [];
 
+  // Datos reales de sensores
+  latestSensorData: SensorData | null = null;
+  sensorDataAvailable = false;
+
   constructor(
     private router: Router,
     private tokenService: TokenService,
     private roleService: RoleService,
     private perfilesService: PerfilesPlantas,
     private themeService: ThemeService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private sensorsService: SensorsService
   ) { }
   ngOnInit(): void {
     this.loadUserInfo();
     this.updateTime();
     this.startTimeUpdate();
-    this.generateRandomData();
-    this.startDataUpdate();
+    this.initSensorData(); // Inicializar datos reales de sensores
     this.startPerfilesSyncCheck(); // Nuevo método para sincronizar perfiles
 
     // Prevenir navegación hacia atrás
@@ -264,25 +287,91 @@ export class DashboardComponent implements OnInit, OnDestroy {
   )`;
   }
 
-  private generateRandomData(): void {
-    // Solo generar datos si hay un perfil activo
-    if (!this.tienePerfilActivo) {
-      return;
+  private initSensorData(): void {
+    // Suscribirse a los datos de sensores en tiempo real
+    this.sensorsService.latestData$.pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        if (data) {
+          this.latestSensorData = data;
+          this.updateSensorValues(data);
+          this.sensorDataAvailable = true;
+        }
+      });
+  }
+
+  private updateSensorValues(data: SensorData): void {
+    // Actualizar temperatura
+    if (data.temperature) {
+      this.temperatureValue = parseFloat(data.temperature);
+      this.temperaturePercent = this.calculatePercent(this.temperatureValue, this.temperatureMin, this.temperatureMax);
     }
 
-    // Generar valores simulados basados en los rangos del perfil
-    this.temperatureValue = +(this.temperatureMin + Math.random() * (this.temperatureMax - this.temperatureMin)).toFixed(1);
-    this.temperaturePercent = ((this.temperatureValue - this.temperatureMin) / (this.temperatureMax - this.temperatureMin)) * 100;
+    // Actualizar humedad (usar escala completa 0-100% para la barra visual)
+    if (data.humidity) {
+      this.humidityValue = parseFloat(data.humidity);
+      // Para la barra visual, usar siempre 0-100% para que sea proporcional
+      this.humidityPercent = Math.max(0, Math.min(100, this.humidityValue));
+    }
 
-    this.humidityValue = +(this.humidityMin + Math.random() * (this.humidityMax - this.humidityMin)).toFixed(0);
-    this.humidityPercent = ((this.humidityValue - this.humidityMin) / (this.humidityMax - this.humidityMin)) * 100;
+    // Actualizar pH
+    if (data.ph) {
+      this.phValue = parseFloat(data.ph);
+      this.phPercent = this.calculatePercent(this.phValue, this.phMin, this.phMax);
+    }
 
-    this.phValue = +(this.phMin + Math.random() * (this.phMax - this.phMin)).toFixed(1);
-    this.phPercent = ((this.phValue - this.phMin) / (this.phMax - this.phMin)) * 100;
+    // Actualizar nutrientes (mantener valores originales en mg/kg)
+    if (data.n) {
+      this.nitrogenRawValue = parseFloat(data.n);
+      this.nitrogenValue = this.convertNutrientToPercent(this.nitrogenRawValue, 'nitrogen');
+    }
+    if (data.p) {
+      this.phosphorusRawValue = parseFloat(data.p);
+      this.phosphorusValue = this.convertNutrientToPercent(this.phosphorusRawValue, 'phosphorus');
+    }
+    if (data.k) {
+      this.potassiumRawValue = parseFloat(data.k);
+      this.potassiumValue = this.convertNutrientToPercent(this.potassiumRawValue, 'potassium');
+    }
 
-    this.nitrogenValue = +(this.nitrogenMin + Math.random() * (this.nitrogenMax - this.nitrogenMin)).toFixed(0);
-    this.phosphorusValue = +(this.phosphorusMin + Math.random() * (this.phosphorusMax - this.phosphorusMin)).toFixed(0);
-    this.potassiumValue = +(this.potassiumMin + Math.random() * (this.potassiumMax - this.potassiumMin)).toFixed(0);
+    // Generar alertas basadas en los valores actuales
+    this.generateAlerts();
+
+    console.log('Valores de sensores actualizados desde API:', {
+      temperature: this.temperatureValue,
+      humidity: this.humidityValue,
+      ph: this.phValue,
+      nitrogen: `${this.nitrogenRawValue} mg/kg (${this.nitrogenValue}%)`,
+      phosphorus: `${this.phosphorusRawValue} mg/kg (${this.phosphorusValue}%)`,
+      potassium: `${this.potassiumRawValue} mg/kg (${this.potassiumValue}%)`
+    });
+  }
+
+  private calculatePercent(value: number, min: number, max: number): number {
+    if (max === min) return 50; // Evitar división por cero
+    const percent = ((value - min) / (max - min)) * 100;
+    return Math.max(0, Math.min(100, percent)); // Limitar entre 0 y 100
+  }
+
+  private convertNutrientToPercent(value: number, nutrient: string): number {
+    // Conversión aproximada de mg/kg a porcentaje basado en rangos típicos
+    // Estos valores pueden ajustarse según las necesidades específicas
+    let maxValue: number;
+
+    switch (nutrient) {
+      case 'nitrogen':
+        maxValue = 500; // mg/kg máximo esperado para nitrógeno
+        break;
+      case 'phosphorus':
+        maxValue = 800; // mg/kg máximo esperado para fósforo
+        break;
+      case 'potassium':
+        maxValue = 800; // mg/kg máximo esperado para potasio
+        break;
+      default:
+        maxValue = 100;
+    }
+
+    return Math.round((value / maxValue) * 100);
   }
 
   // Método para actualizar rangos según el perfil seleccionado
@@ -328,9 +417,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.temperatureMin = 10;
     this.temperatureMax = 30;
     this.temperatureOptimal = 22;
-    this.humidityMin = 40;
-    this.humidityMax = 80;
-    this.humidityOptimal = 65;
+    this.humidityMin = 50;  // Rangos más realistas
+    this.humidityMax = 95;
+    this.humidityOptimal = 70;
     this.phMin = 5.0;
     this.phMax = 7.5;
     this.phOptimal = 6.5;
@@ -344,10 +433,99 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.potassiumMax = 100;
     this.potassiumOptimal = 50;
   }
-  private startDataUpdate(): void {
-    setInterval(() => {
-      this.generateRandomData();
-    }, 3000);
+  // Método para forzar actualización de datos de sensores
+  refreshSensorData(): void {
+    this.sensorsService.refreshData('esp32-001');
+  }
+
+  // Sistema de alertas inteligente
+  private generateAlerts(): void {
+    this.activeAlerts = []; // Limpiar alertas previas
+    const timestamp = new Date();
+
+    // Verificar temperatura
+    if (this.temperatureValue < this.temperatureMin || this.temperatureValue > this.temperatureMax) {
+      this.activeAlerts.push({
+        id: 'temp-' + timestamp.getTime(),
+        type: 'error',
+        sensor: 'Temperatura',
+        message: `Temperatura fuera del rango (${this.temperatureValue}°C). Rango: ${this.temperatureMin}°C - ${this.temperatureMax}°C`,
+        value: this.temperatureValue,
+        range: { min: this.temperatureMin, max: this.temperatureMax, optimal: this.temperatureOptimal },
+        timestamp
+      });
+    }
+
+    // Verificar humedad  
+    if (this.humidityValue < this.humidityMin || this.humidityValue > this.humidityMax) {
+      this.activeAlerts.push({
+        id: 'humidity-' + timestamp.getTime(),
+        type: 'warning',
+        sensor: 'Humedad',
+        message: `Humedad fuera del rango (${this.humidityValue}%). Rango: ${this.humidityMin}% - ${this.humidityMax}%`,
+        value: this.humidityValue,
+        range: { min: this.humidityMin, max: this.humidityMax, optimal: this.humidityOptimal },
+        timestamp
+      });
+    }
+
+    // Verificar pH
+    if (this.phValue < this.phMin || this.phValue > this.phMax) {
+      this.activeAlerts.push({
+        id: 'ph-' + timestamp.getTime(),
+        type: 'error',
+        sensor: 'pH',
+        message: `pH fuera del rango (${this.phValue}). Rango: ${this.phMin} - ${this.phMax}`,
+        value: this.phValue,
+        range: { min: this.phMin, max: this.phMax, optimal: this.phOptimal },
+        timestamp
+      });
+    }
+
+    // Verificar nutrientes (usando rangos en mg/kg)
+    const nitrogenMinMg = this.nitrogenMin * 5; // Conversión aproximada
+    const nitrogenMaxMg = this.nitrogenMax * 5;
+    if (this.nitrogenRawValue < nitrogenMinMg || this.nitrogenRawValue > nitrogenMaxMg) {
+      this.activeAlerts.push({
+        id: 'nitrogen-' + timestamp.getTime(),
+        type: 'warning',
+        sensor: 'Nitrógeno',
+        message: `Nivel de Nitrógeno (N) fuera del rango (${this.nitrogenRawValue} mg/kg).`,
+        value: this.nitrogenRawValue,
+        range: { min: nitrogenMinMg, max: nitrogenMaxMg },
+        timestamp
+      });
+    }
+
+    const phosphorusMinMg = this.phosphorusMin * 8;
+    const phosphorusMaxMg = this.phosphorusMax * 8;
+    if (this.phosphorusRawValue < phosphorusMinMg || this.phosphorusRawValue > phosphorusMaxMg) {
+      this.activeAlerts.push({
+        id: 'phosphorus-' + timestamp.getTime(),
+        type: 'warning',
+        sensor: 'Fósforo',
+        message: `Nivel de Fósforo (P) fuera del rango (${this.phosphorusRawValue} mg/kg).`,
+        value: this.phosphorusRawValue,
+        range: { min: phosphorusMinMg, max: phosphorusMaxMg },
+        timestamp
+      });
+    }
+
+    const potassiumMinMg = this.potassiumMin * 8;
+    const potassiumMaxMg = this.potassiumMax * 8;
+    if (this.potassiumRawValue < potassiumMinMg || this.potassiumRawValue > potassiumMaxMg) {
+      this.activeAlerts.push({
+        id: 'potassium-' + timestamp.getTime(),
+        type: 'warning',
+        sensor: 'Potasio',
+        message: `Nivel de Potasio (K) fuera del rango (${this.potassiumRawValue} mg/kg).`,
+        value: this.potassiumRawValue,
+        range: { min: potassiumMinMg, max: potassiumMaxMg },
+        timestamp
+      });
+    }
+
+    console.log('Alertas generadas:', this.activeAlerts.length);
   }
 
   private startPerfilesSyncCheck(): void {

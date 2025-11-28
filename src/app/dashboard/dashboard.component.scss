@@ -943,6 +943,55 @@
     padding: 0;
 }
 
+// Indicador de estado de sensores
+.sensor-status-warning {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--warning-bg, #fff3cd);
+    border: 1px solid var(--warning-border, #ffecb5);
+    color: var(--warning-text, #856404);
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+
+    i {
+        font-size: 1.2rem;
+    }
+
+    .refresh-btn {
+        margin-left: auto;
+        background: var(--warning-text, #856404);
+        color: white;
+        border: none;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: color.adjust(#856404, $lightness: -10%);
+        }
+
+        i {
+            margin-right: 0.25rem;
+            font-size: 0.9rem;
+        }
+    }
+}
+
+// Timestamp de última lectura
+.sensor-timestamp {
+    text-align: center;
+    margin-bottom: 0.5rem;
+
+    small {
+        color: var(--text-muted, #6c757d);
+        font-size: 0.8rem;
+    }
+}
 .progress-sensors {
     display: flex;
     flex-direction: column;
@@ -1113,8 +1162,63 @@
                 line-height: 1.2;
                 margin-top: 0.5rem;
             }
+// Nuevo estilo para mostrar valores en mg/kg
+.gauge-raw-value {
+    font-size: 0.75rem;
+    color: var(--text-muted, #6c757d);
+    text-align: center;
+    margin-top: 0.25rem;
+    font-weight: 500;
+    font-style: italic;
+}
+}
+}
+}
+
+// Estilos mejorados para alertas
+.alerts-section {
+    .section-header {
+        .alert-count {
+            background: var(--danger-color, #dc3545);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            margin-left: 0.5rem;
+            font-weight: 600;
         }
     }
+
+    .alerts-content {
+        .no-alerts {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--success-color, #28a745);
+            font-style: italic;
+            padding: 1rem;
+            text-align: center;
+            justify-content: center;
+
+            i {
+                font-size: 1.2rem;
+            }
+.alert-item {
+    position: relative;
+
+    .alert-time {
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+        color: var(--text-muted, #6c757d);
+        font-size: 0.65rem;
+            
+.alert-text {
+    padding-right: 3rem; // Dar espacio para el tiempo
+    line-height: 1.3;
+}
+}
+}
 }
 // Asegurar layout de 2 columnas en desktop
 @media (min-width: 1025px) {
