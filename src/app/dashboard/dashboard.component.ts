@@ -8,6 +8,8 @@ import { PerfilesPlantas, PerfilPlanta } from '../perfilesPlantas/perfiles-plant
 import { ThemeService } from '../core/services/theme.service';
 import { PerfilModalComponent } from '../shared/components/perfil-modal/perfil-modal.component';
 import { SensorsService, SensorData } from '../shared/services/sensors.service';
+import { ReportService } from '../shared/services/report.service';
+import { AlertService } from '../shared/services/alert.service';
 
 export interface Alert {
   id: string;
@@ -39,6 +41,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Variable para modal de configuración
   showConfiguracionModal = false;
+
+  // Variable para generación de reportes
+  generatingReport = false;
+
+  // Observable para alertas personalizadas
+  alerts$: any;
 
   private destroy$ = new Subject<void>();
 
@@ -96,9 +104,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private perfilesService: PerfilesPlantas,
     private themeService: ThemeService,
     private modalService: NgbModal,
-    private sensorsService: SensorsService
+    private sensorsService: SensorsService,
+    private reportService: ReportService,
+    public alertService: AlertService
   ) { }
   ngOnInit(): void {
+    // Inicializar el observable de alertas
+    this.alerts$ = this.alertService.alert$;
+
     this.loadUserInfo();
     this.updateTime();
     this.startTimeUpdate();
@@ -441,6 +454,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Sistema de alertas inteligente
   private generateAlerts(): void {
     this.activeAlerts = []; // Limpiar alertas previas
+
+    // No generar alertas si no hay perfil seleccionado
+    if (!this.tienePerfilActivo) {
+      return;
+    }
+
     const timestamp = new Date();
 
     // Verificar temperatura
@@ -555,7 +574,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Métodos para gestión de perfiles
   abrirGestionPerfiles(): void {
-    if (this.puedeCrearPerfilesActivos) {
+    if (this.puedeVerPerfilesActivos) {  // Cambiar para permitir ver a estudiantes
       this.showPerfilesModal = true;
     }
   }
@@ -568,8 +587,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.showPerfilesModal = true;
   }
 
-  onPerfilSeleccionado(perfil: PerfilPlanta): void {
-    console.log('Perfil seleccionado:', perfil.nombre);
+  onPerfilSeleccionado(perfil: PerfilPlanta | null): void {
+    if (perfil) {
+      console.log('Perfil seleccionado:', perfil.nombre);
+    } else {
+      console.log('Perfil deseleccionado');
+    }
   }
 
   onCrearPerfil(): void {
@@ -675,6 +698,89 @@ export class DashboardComponent implements OnInit, OnDestroy {
         return 'Crítico';
       default:
         return 'Normal';
+    }
+  }
+
+  async generateHistoryReport(): Promise<void> {
+    if (this.generatingReport || !this.tienePerfilActivo) {
+      return;
+    }
+
+    try {
+      this.generatingReport = true;
+
+      // Primero intentar obtener cualquier dato histórico sin filtro
+      console.log('Intentando obtener datos históricos sin filtro de device_id...');
+      let historyData = await this.sensorsService.getSensorHistory(undefined, 50).toPromise();
+
+      // Si no hay datos, intentar con device_id específico
+      if (!historyData || historyData.length === 0) {
+        console.log('No se encontraron datos sin filtro, intentando con device_id específico...');
+        const deviceId = 'esp32-001';
+        historyData = await this.sensorsService.getSensorHistory(deviceId, 50).toPromise();
+      }
+
+      console.log(`Datos obtenidos del servidor: ${historyData?.length || 0} registros`);
+
+      if (!historyData || historyData.length === 0) {
+        this.alertService.showError(
+          'Sin Datos Históricos',
+          'No hay datos históricos disponibles en la base de datos para generar el reporte. Asegúrate de que el sistema haya registrado lecturas de sensores.',
+          'Entendido'
+        );
+        return;
+      }
+
+      console.log(`Generando reporte con ${historyData.length} registros disponibles`);
+
+      // Obtener el perfil activo para incluir en el reporte
+      const perfilActivo = this.perfilActivo;
+
+      if (!perfilActivo) {
+        this.alertService.showWarning(
+          'Perfil No Seleccionado',
+          'Debes seleccionar un perfil de cultivo antes de generar el reporte. Por favor, selecciona un perfil desde el menú.',
+          'Entendido'
+        );
+        return;
+      }
+
+      // Generar el reporte PDF
+      const reportData = historyData.map(item => ({
+        ...item,
+        id: item.id?.toString()
+      }));
+      this.reportService.generatePDF(reportData);
+
+      // Mostrar confirmación de éxito
+      this.alertService.showSuccess(
+        '¡Reporte Generado!',
+        `Se ha generado exitosamente el reporte con ${historyData.length} registros de datos del perfil "${perfilActivo.nombre}". El archivo se ha descargado automáticamente.`,
+        'Excelente'
+      );
+
+    } catch (error: any) {
+      console.error('Error generating report:', error);
+
+      let title = 'Error al Generar Reporte';
+      let message = '';
+
+      if (error.status === 401) {
+        title = 'Sesión Expirada';
+        message = 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente para continuar.';
+      } else if (error.status === 403) {
+        title = 'Sin Permisos';
+        message = 'No tienes permisos para acceder a este recurso. Contacta al administrador si crees que es un error.';
+      } else if (error.status === 0) {
+        title = 'Sin Conexión';
+        message = 'No se puede conectar con el servidor. Verifica tu conexión a internet e inténtalo nuevamente.';
+      } else {
+        message = 'Ha ocurrido un error inesperado al generar el reporte. Por favor, inténtalo de nuevo en unos momentos.';
+      }
+
+      this.alertService.showError(title, message, 'Reintentar');
+    } finally {
+      this.generatingReport = false;
     }
   }
 }

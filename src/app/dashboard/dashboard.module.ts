@@ -9,6 +9,7 @@ import { ModalPerfilesComponent } from '../perfilesPlantas/modal-perfiles.compon
 import { FormPerfilComponent } from '../perfilesPlantas/form-perfil.component';
 import { ConfiguracionModule } from '../configuracion/configuracion.module';
 import { SharedModule } from '../shared/shared.module';
+import { AlertModalComponent } from '../shared/components/alert-modal/alert-modal.component';
 
 @NgModule({
     declarations: [ 
@@ -24,6 +25,7 @@ import { SharedModule } from '../shared/shared.module';
         DashboardRoutingModule,
         ConfiguracionModule,
         SharedModule,
+        AlertModalComponent
     ],
     providers:[]
 

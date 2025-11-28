@@ -72,13 +72,21 @@ export class ModalPerfilesComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   seleccionarPerfil(perfil: PerfilPlanta) {
-    // Solo permitir seleccionar perfiles activos
+    // Solo permitir interactuar con perfiles activos
     if (!perfil.activo) {
       return; // No hacer nada si el perfil está inactivo
     }
     
-    this.perfilesService.seleccionarPerfilActivo(perfil);
-    this.perfilSeleccionado.emit(perfil);
+    // Si el perfil clickeado ya es el activo, deseleccionarlo
+    if (this.perfilActivo && this.perfilActivo.id === perfil.id) {
+      this.perfilesService.seleccionarPerfilActivo(null);
+      this.perfilSeleccionado.emit(null as any); // Emitir evento de deselección
+    } else {
+    // Seleccionar nuevo perfil
+      this.perfilesService.seleccionarPerfilActivo(perfil);
+      this.perfilSeleccionado.emit(perfil);
+    }
+
     this.cerrar();
   }
 
@@ -139,6 +147,10 @@ export class ModalPerfilesComponent implements OnInit, OnDestroy, OnChanges {
   // Métodos para manejo de roles
   esAdministrador(): boolean {
     return this.roleService.esAdministrador();
+  }
+
+  puedeCrearPerfiles(): boolean {
+    return this.roleService.puedeCrearPerfilesActivos();
   }
 
   reactivarPerfil(perfil: PerfilPlanta, event: Event) {

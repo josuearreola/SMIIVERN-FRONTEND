@@ -12,8 +12,8 @@
         </div>
 
         <div class="header-center">
-            <div *ngIf="puedeVerPerfilesActivos" class="profile-status" [class.clickable]="puedeCrearPerfilesActivos"
-                (click)="puedeCrearPerfilesActivos && abrirGestionPerfiles()">
+            <div *ngIf="puedeVerPerfilesActivos" class="profile-status" [class.clickable]="puedeVerPerfilesActivos"
+                (click)="abrirGestionPerfiles()">
                 <span class="profile-label">Perfil Activo:</span>
                 <span class="profile-name" [class.sin-perfil]="!tienePerfilActivo">
                     {{nombrePerfilActivo}}
@@ -35,10 +35,7 @@
                 </div>
                 <i class="bi bi-moon-fill theme-icon moon" [class.active]="isDarkTheme"></i>
             </div>
-            <button *ngIf="puedeAccederReportes" class="reports-btn" (click)="navigateTo('reports')">
-                <i class="bi bi-file-earmark-text"></i>
-                <span>Reportes</span>
-            </button>
+           
 
             <div class="hamburger-menu">
                 <button class="hamburger-btn" (click)="toggleMobileMenu()">
@@ -130,26 +127,42 @@
                             <i class="bi bi-activity"></i>
                             <h3>Monitoreo de sensores</h3>
                         </div>
-                        <a class="history-link" href="#" (click)="navigateTo('history')">
-                            <i class="bi bi-clock-history"></i>
-                            Ver historial
-                        </a>
+                        <button class="history-link" [disabled]="generatingReport || !tienePerfilActivo" (click)="generateHistoryReport()"
+                            [title]="!tienePerfilActivo ? 'Selecciona un perfil para generar reporte' : 'Generar reporte PDF'">
+                            <i class="bi" [class.bi-clock-history]="!generatingReport" [class.bi-arrow-clockwise]="generatingReport"></i>
+                            <span>{{ generatingReport ? 'Generando...' : 'Ver historial' }}</span>
+                        </button>
                     </div>
                     <div class="sensors-content">
-                        <!-- Indicador de estado de conexión con sensores -->
-                        <div *ngIf="!sensorDataAvailable" class="sensor-status-warning">
-                            <i class="bi bi-exclamation-triangle"></i>
-                            <span>Sin datos de sensores. Verificar conexión con ESP32.</span>
-                            <button class="refresh-btn" (click)="refreshSensorData()">
-                                <i class="bi bi-arrow-clockwise"></i>
-                                Reintentar
-                            </button>
+                        <!-- Estado sin perfil seleccionado -->
+                        <div *ngIf="!tienePerfilActivo" class="no-profile-selected" (click)="abrirGestionPerfiles()">
+                            <div class="no-profile-icon">
+                                <i class="bi bi-flower1"></i>
+                            </div>
+                            <h4>Selecciona un perfil de planta</h4>
+                            <p>Necesitas seleccionar un perfil de planta para ver el monitoreo de sensores</p>
+                            <div class="select-profile-btn">
+                                <i class="bi bi-plus-circle"></i>
+                                <span>Seleccionar perfil</span>
+                            </div>
                         </div>
                         
-                        <!-- Datos de sensores en tiempo real -->
-                        <div class="sensor-timestamp" *ngIf="latestSensorData">
-                            <small>Última lectura: {{ latestSensorData.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</small>
-                        </div>
+                        <!-- Estado con perfil seleccionado -->
+                        <div *ngIf="tienePerfilActivo">
+                            <!-- Indicador de estado de conexión con sensores -->
+                            <div *ngIf="!sensorDataAvailable" class="sensor-status-warning">
+                                <i class="bi bi-exclamation-triangle"></i>
+                                <span>Sin datos de sensores. Verificar conexión con ESP32.</span>
+                                <button class="refresh-btn" (click)="refreshSensorData()">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                    Reintentar
+                                </button>
+                            </div>
+                            
+                            <!-- Datos de sensores en tiempo real -->
+                            <div class="sensor-timestamp" *ngIf="latestSensorData">
+                                <small>Última lectura: {{ latestSensorData.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</small>
+                            </div>
                         <div class="progress-sensors">
                             <div class="sensor-item">
                                 <label>Temperatura</label>
@@ -226,12 +239,16 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 </div>
+<!-- Componente de Alertas Globales -->
+<app-alert-modal></app-alert-modal>
+
 <!-- Componente Modal de Perfiles -->
 <app-modal-perfiles [show]="showPerfilesModal" (cerrarModal)="cerrarModalPerfiles()"
     (perfilSeleccionado)="onPerfilSeleccionado($event)">
@@ -239,3 +256,8 @@
 <!-- Modal de Configuración -->
 <app-configuracion-modal *ngIf="showConfiguracionModal" (closeModal)="closeConfiguracionModal()">
 </app-configuracion-modal>
+<!-- Alert Modal Personalizada -->
+<app-alert-modal [show]="(alerts$ | async) !== null"
+    [data]="(alerts$ | async) || { title: '', message: '', type: 'info' }" (confirm)="alertService.close()"
+    (cancel)="alertService.close()" (close)="alertService.close()">
+</app-alert-modal>

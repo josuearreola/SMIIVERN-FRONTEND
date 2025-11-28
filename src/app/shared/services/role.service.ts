@@ -39,7 +39,7 @@ export class RoleService {
         return rol === RolUsuario.ADMINISTRADOR || rol === RolUsuario.MANTENIMIENTO;
     }
     puedeVerPerfilesActivos(): boolean {
-        // Todos los usuarios pueden ver perfiles activos
+        // Todos los usuarios pueden ver perfiles (incluidos estudiantes)
         return true;
     }
      puedeAccederReportes(): boolean{

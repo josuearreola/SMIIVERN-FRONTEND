@@ -925,14 +925,39 @@
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
+    background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
     
     &:hover {
         color: var(--dark-green, #5A6C57);
         text-decoration: underline;
     }
     
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+    
+            &:hover {
+                color: var(--primary-green);
+                text-decoration: none;
+            }
+        }
     i {
         font-size: 1rem;
+        &.bi-arrow-clockwise {
+                animation: spin 1s linear infinite;
+        }
+}
+}
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
     }
 }
 
@@ -990,6 +1015,69 @@
     small {
         color: var(--text-muted, #6c757d);
         font-size: 0.8rem;
+    }
+}
+// Estado sin perfil seleccionado
+.no-profile-selected {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    border: 2px dashed var(--border-light, #e9ecef);
+    border-radius: 12px;
+    background: var(--bg-tertiary, #f8f9fa);
+    transition: all 0.3s ease;
+    min-height: 300px;
+
+    &:hover {
+        border-color: var(--primary-green, #85a98f);
+        background: var(--bg-secondary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-medium);
+    }
+
+    .no-profile-icon {
+        font-size: 3.5rem;
+        color: var(--text-muted, #6c757d);
+        margin-bottom: 1.5rem;
+
+        i {
+            opacity: 0.6;
+        }
+    }
+
+    h4 {
+        margin: 0 0 1rem 0;
+        color: var(--text-primary);
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    p {
+        margin: 0 0 2rem 0;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.4;
+        max-width: 280px;
+    }
+
+    .select-profile-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--primary-green, #85a98f);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: background 0.2s ease;
+
+        i {
+            font-size: 1.1rem;
+        }
     }
 }
 .progress-sensors {

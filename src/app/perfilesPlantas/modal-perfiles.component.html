@@ -23,9 +23,10 @@
                     <i class="bi bi-flower1"></i>
                 </div>
                 <h4>No hay perfiles creados</h4>
-                <p>Crea tu primer perfil de planta para comenzar el monitoreo específico</p>
+                <p *ngIf="puedeCrearPerfiles()">Crea tu primer perfil de planta para comenzar el monitoreo específico</p>
+                <p *ngIf="!puedeCrearPerfiles()">No hay perfiles disponibles para seleccionar</p>
                 
-                <div class="action-cards">
+                <div class="action-cards" *ngIf="puedeCrearPerfiles()">
                     <div class="create-card" (click)="crearNuevoPerfil()">
                         <div class="card-icon">
                             <i class="bi bi-plus-circle-fill"></i>
@@ -39,8 +40,8 @@
             <!-- Lista de perfiles existentes -->
             <div *ngIf="!cargandoPerfiles && perfiles.length > 0" class="perfiles-list">
                 <div class="perfiles-grid">
-                    <!-- Card para crear nuevo perfil -->
-                    <div class="perfil-card create-new" (click)="crearNuevoPerfil()">
+                    <!-- Card para crear nuevo perfil - solo para admin/mantenimiento -->
+                    <div *ngIf="puedeCrearPerfiles()" class="perfil-card create-new" (click)="crearNuevoPerfil()">
                         <div class="card-content">
                             <div class="card-icon">
                                 <i class="bi bi-plus-circle-fill"></i>
@@ -75,14 +76,14 @@
                                             title="Reactivar">
                                         <i class="bi bi-arrow-clockwise"></i>
                                     </button>
-                                    <!-- Botones de editar y eliminar solo para perfiles activos -->
-                                    <button *ngIf="perfil.activo"
+                                    <!-- Botones de editar y eliminar solo para admin/mantenimiento y perfiles activos -->
+                                    <button *ngIf="perfil.activo && puedeCrearPerfiles()"
                                             class="action-btn edit" 
                                             (click)="editarPerfil(perfil, $event)" 
                                             title="Editar">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <button *ngIf="perfil.activo"
+                                    <button *ngIf="perfil.activo && puedeCrearPerfiles()"
                                             class="action-btn delete" 
                                             (click)="eliminarPerfil(perfil, $event)" 
                                             title="Eliminar">

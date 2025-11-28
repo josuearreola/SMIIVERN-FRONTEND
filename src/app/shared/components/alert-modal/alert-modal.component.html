@@ -1,0 +1,38 @@
+<div class="alert-overlay" *ngIf="show" (click)="onClose()">
+  <div class="alert-modal" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="alert-header">
+      <div class="alert-icon">
+        <i [class]="getIconClass()"></i>
+      </div>
+      <h4 class="alert-title">{{ data.title }}</h4>
+    </div>
+
+    <!-- Content -->
+    <div class="alert-content">
+      <p class="alert-message">{{ data.message }}</p>
+    </div>
+
+    <!-- Actions -->
+    <div class="alert-actions">
+      <button 
+        *ngIf="data.showCancel" 
+        type="button" 
+        class="btn btn-secondary"
+        (click)="onCancel()">
+        {{ data.cancelText || 'Cancelar' }}
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-primary"
+        (click)="onConfirm()">
+        {{ data.confirmText || 'Aceptar' }}
+      </button>
+    </div>
+
+    <!-- Close button -->
+    <button type="button" class="alert-close" (click)="onClose()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, timer } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, BehaviorSubject, timer, throwError } from 'rxjs';
+import { switchMap, tap, catchError } from 'rxjs/operators';
 
 export interface SensorData {
   id: number;
@@ -46,20 +46,43 @@ export class SensorsService {
   /**
    * Obtiene el histórico de lecturas
    */
-  getSensorHistory(deviceId: string, limit?: number): Observable<SensorData[]> {
-    const url = limit ? 
-      `${this.apiUrl}/sensors/history?device_id=${deviceId}&limit=${limit}` : 
-      `${this.apiUrl}/sensors/history?device_id=${deviceId}`;
+  getSensorHistory(deviceId?: string, limit?: number): Observable<SensorData[]> {
+    let url = `${this.apiUrl}/sensors/history`;
+    const params: string[] = [];
+
+    if (deviceId) {
+      params.push(`device_id=${deviceId}`);
+    }
+    if (limit) {
+      params.push(`limit=${limit}`);
+    }
+
+    if (params.length > 0) {
+      url += `?${params.join('&')}`;
+    }
+
+    console.log(`Solicitando histórico de sensores: ${url}`);
     
-    return this.http.get<SensorData[]>(url);
+    return this.http.get<SensorData[]>(url).pipe(
+      tap(data => console.log(`Histórico recibido: ${data.length} registros`)),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error al obtener histórico de sensores:', error);
+        if (error.status === 401) {
+          console.error('Error de autenticación - Token JWT inválido o expirado');
+        } else if (error.status === 403) {
+          console.error('Error de autorización - Sin permisos');
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
   /**
-   * Inicia el polling automático para actualizar datos cada 30 segundos
+   * Inicia el polling automático para actualizar datos cada 2 segundos
    */
   private startPolling(): void {
-    // Actualizar cada 30 segundos
-    timer(0, 30000).pipe(
+    // Actualizar cada 2 segundos
+    timer(0, 2000).pipe(
       switchMap(() => this.getLatestSensorData('esp32-001')),
       tap(data => {
         this.latestDataSubject.next(data);
