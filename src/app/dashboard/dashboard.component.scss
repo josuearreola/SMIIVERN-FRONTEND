@@ -1202,22 +1202,25 @@
 
             i {
                 font-size: 1.2rem;
-            }
-.alert-item {
-    position: relative;
+        }
 
-    .alert-time {
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-        color: var(--text-muted, #6c757d);
-        font-size: 0.65rem;
+        .alert-item {
+            position: relative;
+
+            .alert-time {
+                position: absolute;
+                right: 0.75rem;
+                top: 0.5rem;
+                color: var(--text-muted, #6c757d);
+                font-size: 0.65rem;
+            }
             
-.alert-text {
-    padding-right: 3rem; // Dar espacio para el tiempo
-    line-height: 1.3;
-}
-}
+            .alert-text {
+                padding-right: 3rem; // Dar espacio para el tiempo
+                line-height: 1.3;
+            }
+        }
+    }
 }
 }
 // Asegurar layout de 2 columnas en desktop
@@ -1233,17 +1236,18 @@
         gap: 1rem; // Reducir de 1.5rem a 1rem
     }
 
-                // Mostrar theme-switch en desktop
-                .dashboard-header .header-right .theme-switch-container {
-                    display: flex !important;
-                    align-items: center;
-                    gap: 0.8rem;
-                }
-                
-                // Ocultar toggle de tema del menú hamburguesa en desktop
-                .mobile-menu-dropdown .theme-toggle-mobile {
-                    display: none !important;
-                }
+    // Mostrar theme-switch en desktop
+    .dashboard-header .header-right .theme-switch-container {
+        display: flex !important;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    
+    // Ocultar toggle de tema del menú hamburguesa en desktop
+    .mobile-menu-dropdown .theme-toggle-mobile {
+        display: none !important;
+    }
+
     // Optimizar nutrientes para desktop - horizontal y compacto
     .nutrients-gauges {
         grid-template-columns: repeat(3, 1fr) !important;
