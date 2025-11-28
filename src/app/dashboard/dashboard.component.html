@@ -149,15 +149,7 @@
                         
                         <!-- Estado con perfil seleccionado -->
                         <div *ngIf="tienePerfilActivo">
-                            <!-- Indicador de estado de conexión con sensores -->
-                            <div *ngIf="!sensorDataAvailable" class="sensor-status-warning">
-                                <i class="bi bi-exclamation-triangle"></i>
-                                <span>Sin datos de sensores. Verificar conexión con ESP32.</span>
-                                <button class="refresh-btn" (click)="refreshSensorData()">
-                                    <i class="bi bi-arrow-clockwise"></i>
-                                    Reintentar
-                                </button>
-                            </div>
+                            
                             
                             <!-- Datos de sensores en tiempo real -->
                             <div class="sensor-timestamp" *ngIf="latestSensorData">
