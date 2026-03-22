@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, BehaviorSubject, timer, throwError } from 'rxjs';
-import { switchMap, tap, catchError } from 'rxjs/operators';
+import { Observable, BehaviorSubject, EMPTY, timer, throwError } from 'rxjs';
+import { catchError, distinctUntilChanged, exhaustMap, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 export interface SensorData {
   id: number;
@@ -22,20 +23,22 @@ export interface SensorData {
   providedIn: 'root'
 })
 export class SensorsService {
-  private apiUrl = 'http://localhost:3000';
-  private latestDataSubject = new BehaviorSubject<SensorData | null>(null);
+  private readonly apiUrl = environment.apiUrl;
+  private readonly defaultDeviceId = 'esp32-001';
+  private readonly pollingIntervalMs = 1000;
+  private readonly latestDataSubject = new BehaviorSubject<SensorData | null>(null);
   
   // Observable público para que los componentes se suscriban
   public latestData$ = this.latestDataSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private readonly http: HttpClient) {
     this.startPolling();
   }
 
   /**
    * Obtiene la última lectura de sensores
    */
-  getLatestSensorData(deviceId?: string): Observable<SensorData> {
+  getLatestSensorData(deviceId?: string): Observable<SensorData | null> {
     const url = deviceId ? 
       `${this.apiUrl}/sensors/latest?device_id=${deviceId}` : 
       `${this.apiUrl}/sensors/latest`;
@@ -81,18 +84,24 @@ export class SensorsService {
    * Inicia el polling automático para actualizar datos cada 1 segundo
    */
   private startPolling(): void {
-    // Actualizar cada 1 segundo para mayor dinamismo
-    timer(0, 1000).pipe(
-      switchMap(() => this.getLatestSensorData('esp32-001')),
-      tap(data => {
-        this.latestDataSubject.next(data);
-        console.log('Datos de sensores actualizados:', data);
-      })
-    ).subscribe({
-      error: (error) => {
-        console.error('Error al obtener datos de sensores:', error);
-      }
-    });
+    timer(0, this.pollingIntervalMs)
+      .pipe(
+        // Evita solicitudes solapadas si la red/backend responden lento.
+        exhaustMap(() =>
+          this.getLatestSensorData(this.defaultDeviceId).pipe(
+            catchError((error) => {
+              console.error('Error al obtener datos de sensores:', error);
+              return EMPTY;
+            })
+          )
+        ),
+        distinctUntilChanged(
+          (previous, current) =>
+            previous?.id === current?.id && previous?.timestamp === current?.timestamp,
+        ),
+        tap((data) => this.latestDataSubject.next(data))
+      )
+      .subscribe();
   }
 
   /**

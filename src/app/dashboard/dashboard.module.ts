@@ -10,6 +10,7 @@ import { FormPerfilComponent } from '../perfilesPlantas/form-perfil.component';
 import { ConfiguracionModule } from '../configuracion/configuracion.module';
 import { SharedModule } from '../shared/shared.module';
 import { AlertModalComponent } from '../shared/components/alert-modal/alert-modal.component';
+import { ChartModule } from 'primeng/chart';
 
 @NgModule({
     declarations: [ 
@@ -25,6 +26,7 @@ import { AlertModalComponent } from '../shared/components/alert-modal/alert-moda
         DashboardRoutingModule,
         ConfiguracionModule,
         SharedModule,
+        ChartModule,
         AlertModalComponent
     ],
     providers:[]

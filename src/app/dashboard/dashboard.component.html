@@ -139,6 +139,27 @@
                             <div class="sensor-timestamp" *ngIf="latestSensorData">
                                 <small>Última lectura: {{ latestSensorData.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</small>
                             </div>
+
+                            <div class="live-charts-grid" *ngIf="sensorDataAvailable">
+                                <div class="chart-card">
+                                    <div class="chart-title-row">
+                                        <h4>Tendencia ambiental</h4>
+                                        <span>Temperatura, Humedad y pH</span>
+                                    </div>
+                                    <p-chart type="line" [data]="environmentChartData" [options]="chartOptions"
+                                        height="240"></p-chart>
+                                </div>
+
+                                <div class="chart-card">
+                                    <div class="chart-title-row">
+                                        <h4>Tendencia nutrientes</h4>
+                                        <span>N, P y K en mg/kg</span>
+                                    </div>
+                                    <p-chart type="line" [data]="nutrientsChartData" [options]="chartOptions"
+                                        height="240"></p-chart>
+                                </div>
+                            </div>
+
                         <div class="progress-sensors">
                             <div class="sensor-item">
                                 <label>Temperatura</label>

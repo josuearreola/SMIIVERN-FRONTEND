@@ -1017,6 +1017,40 @@
         font-size: 0.8rem;
     }
 }
+
+
+.live-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+
+    .chart-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 0.8rem;
+        min-height: 280px;
+
+        .chart-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+
+            h4 {
+                margin: 0;
+                font-size: 0.95rem;
+                color: var(--text-primary);
+            }
+
+            span {
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+            }
+        }
+    }
+}
 // Estado sin perfil seleccionado
 .no-profile-selected {
     display: flex;
@@ -1072,6 +1106,10 @@
         color: white;
         padding: 0.75rem 1.5rem;
         border-radius: 8px;
+
+    .live-charts-grid {
+        grid-template-columns: 1fr;
+    }
         font-weight: 500;
         transition: background 0.2s ease;
 

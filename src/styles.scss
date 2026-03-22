@@ -9,6 +9,7 @@ $warning-yellow: #F1C40F;
 
 // Usar @use en lugar de @import para Bootstrap
 @use 'bootstrap/scss/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 
 // Clase base para autenticación
 .auth-container {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subject, takeUntil, filter } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -28,6 +28,10 @@ export interface Alert {
   standalone: false
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  private readonly maxChartPoints = 30;
+  private timeIntervalId: ReturnType<typeof setInterval> | null = null;
+  private perfilesSyncIntervalId: ReturnType<typeof setInterval> | null = null;
+
   sidebarCollapsed = false;
   userInfo: any = null;
   currentTime: string = '';
@@ -97,6 +101,55 @@ export class DashboardComponent implements OnInit, OnDestroy {
   latestSensorData: SensorData | null = null;
   sensorDataAvailable = false;
 
+  environmentChartData: any = {
+    labels: [],
+    datasets: [
+      { label: 'Temperatura (C)', data: [], borderColor: '#ef4444', tension: 0.35 },
+      { label: 'Humedad (%)', data: [], borderColor: '#2563eb', tension: 0.35 },
+      { label: 'pH', data: [], borderColor: '#16a34a', tension: 0.35 },
+    ],
+  };
+
+  nutrientsChartData: any = {
+    labels: [],
+    datasets: [
+      { label: 'Nitrogeno (mg/kg)', data: [], borderColor: '#10b981', tension: 0.35 },
+      { label: 'Fosforo (mg/kg)', data: [], borderColor: '#f59e0b', tension: 0.35 },
+      { label: 'Potasio (mg/kg)', data: [], borderColor: '#8b5cf6', tension: 0.35 },
+    ],
+  };
+
+  chartOptions: any = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 220,
+      easing: 'easeOutCubic',
+    },
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+    },
+    elements: {
+      point: {
+        radius: 0,
+      },
+      line: {
+        borderWidth: 2,
+      },
+    },
+    scales: {
+      x: {
+        ticks: { maxTicksLimit: 6 },
+      },
+    },
+  };
+
   constructor(
     private router: Router,
     private tokenService: TokenService,
@@ -106,14 +159,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private sensorsService: SensorsService,
     private reportService: ReportService,
-    public alertService: AlertService,
-    private cdr: ChangeDetectorRef
+    public alertService: AlertService
   ) { }
   ngOnInit(): void {
     // Inicializar el observable de alertas
     this.alerts$ = this.alertService.alert$;
 
     this.loadUserInfo();
+    this.initializeCharts();
     this.updateTime();
     this.startTimeUpdate();
     this.initSensorData(); // Inicializar datos reales de sensores
@@ -168,6 +221,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         sub.unsubscribe();
       }
     });
+
+    if (this.timeIntervalId) {
+      clearInterval(this.timeIntervalId);
+    }
+
+    if (this.perfilesSyncIntervalId) {
+      clearInterval(this.perfilesSyncIntervalId);
+    }
   }
 
   private preventBackNavigation(): void {
@@ -212,7 +273,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     })
   }
   private startTimeUpdate(): void {
-    setInterval(() => {
+    this.timeIntervalId = setInterval(() => {
       this.updateTime();
 
     }, 500); // Actualizar cada 500ms para mayor dinamismo
@@ -347,20 +408,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.potassiumValue = this.convertNutrientToPercent(this.potassiumRawValue, 'potassium');
     }
 
+    this.pushLiveChartPoints(data);
+
     // Generar alertas basadas en los valores actuales
     this.generateAlerts();
 
-    // Forzar detección de cambios para actualización inmediata de gráficas
-    this.cdr.detectChanges();
-
-    console.log('Valores de sensores actualizados desde API:', {
-      temperature: this.temperatureValue,
-      humidity: this.humidityValue,
-      ph: this.phValue,
-      nitrogen: `${this.nitrogenRawValue} mg/kg (${this.nitrogenValue}%)`,
-      phosphorus: `${this.phosphorusRawValue} mg/kg (${this.phosphorusValue}%)`,
-      potassium: `${this.potassiumRawValue} mg/kg (${this.potassiumValue}%)`
-    });
   }
 
   private calculatePercent(value: number, min: number, max: number): number {
@@ -553,11 +605,99 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private startPerfilesSyncCheck(): void {
     // Recargar perfiles cada 30 segundos para detectar cambios de edición
-    setInterval(() => {
+    this.perfilesSyncIntervalId = setInterval(() => {
       if (this.perfilActivo) {
         this.perfilesService.cargarPerfiles();
       }
     }, 30000);
+  }
+
+  private initializeCharts(): void {
+    this.environmentChartData = {
+      ...this.environmentChartData,
+      datasets: this.environmentChartData.datasets.map((dataset: any) => ({
+        ...dataset,
+        pointRadius: 0,
+        fill: false,
+      })),
+    };
+
+    this.nutrientsChartData = {
+      ...this.nutrientsChartData,
+      datasets: this.nutrientsChartData.datasets.map((dataset: any) => ({
+        ...dataset,
+        pointRadius: 0,
+        fill: false,
+      })),
+    };
+  }
+
+  private pushLiveChartPoints(data: SensorData): void {
+    const label = new Date(data.timestamp).toLocaleTimeString('es-ES', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+
+    const temperature = this.parseNumericValue(data.temperature);
+    const humidity = this.parseNumericValue(data.humidity);
+    const ph = this.parseNumericValue(data.ph);
+    const nitrogen = this.parseNumericValue(data.n);
+    const phosphorus = this.parseNumericValue(data.p);
+    const potassium = this.parseNumericValue(data.k);
+
+    this.environmentChartData = {
+      labels: this.appendPoint(this.environmentChartData.labels, label),
+      datasets: [
+        {
+          ...this.environmentChartData.datasets[0],
+          data: this.appendPoint(this.environmentChartData.datasets[0].data, temperature),
+        },
+        {
+          ...this.environmentChartData.datasets[1],
+          data: this.appendPoint(this.environmentChartData.datasets[1].data, humidity),
+        },
+        {
+          ...this.environmentChartData.datasets[2],
+          data: this.appendPoint(this.environmentChartData.datasets[2].data, ph),
+        },
+      ],
+    };
+
+    this.nutrientsChartData = {
+      labels: this.appendPoint(this.nutrientsChartData.labels, label),
+      datasets: [
+        {
+          ...this.nutrientsChartData.datasets[0],
+          data: this.appendPoint(this.nutrientsChartData.datasets[0].data, nitrogen),
+        },
+        {
+          ...this.nutrientsChartData.datasets[1],
+          data: this.appendPoint(this.nutrientsChartData.datasets[1].data, phosphorus),
+        },
+        {
+          ...this.nutrientsChartData.datasets[2],
+          data: this.appendPoint(this.nutrientsChartData.datasets[2].data, potassium),
+        },
+      ],
+    };
+  }
+
+  private appendPoint<T>(series: T[], value: T): T[] {
+    const updated = [...series, value];
+    if (updated.length > this.maxChartPoints) {
+      return updated.slice(updated.length - this.maxChartPoints);
+    }
+    return updated;
+  }
+
+  private parseNumericValue(value: string | null): number | null {
+    if (value == null) {
+      return null;
+    }
+
+    const parsed = parseFloat(value);
+    return Number.isNaN(parsed) ? null : parsed;
   }
 
   get puedeAccederConfiguracion(): boolean {
