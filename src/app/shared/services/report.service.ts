@@ -74,7 +74,7 @@ export class ReportService {
 
   constructor() { }
 
-  generatePDF(data: SensorData[]): void {
+  async generatePDF(data: SensorData[]): Promise<void> {
     this.currentReport.data = data;
     this.currentReport.analysis = this.analyzeData(data);
     this.currentReport.recommendations = this.generateRecommendations(this.currentReport.analysis);
@@ -114,9 +114,57 @@ export class ReportService {
     // Footer en todas las páginas
     this.addFooters(doc);
     
-    // Descargar PDF
+    // Descargar PDF con fallback para móvil/PWA.
     const timestamp = new Date().toISOString().split('T')[0];
-    doc.save('reporte-smiivern-' + timestamp + '.pdf');
+    const fileName = 'reporte-smiivern-' + timestamp + '.pdf';
+    await this.savePdfWithFallback(doc, fileName);
+  }
+
+  private async savePdfWithFallback(doc: jsPDF, fileName: string): Promise<void> {
+    const pdfBlob = doc.output('blob');
+    const nav = navigator as Navigator & {
+      canShare?: (data: ShareData) => boolean;
+      share?: (data: ShareData) => Promise<void>;
+    };
+
+    const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+
+    // 1) En móviles/PWA intenta compartir archivo (mejor UX en iOS/Android).
+    if (this.isMobileDevice() && nav.canShare?.({ files: [file] }) && nav.share) {
+      try {
+        await nav.share({
+          title: 'Reporte SMIIVERN',
+          text: 'Reporte de historial de sensores',
+          files: [file],
+        });
+        return;
+      } catch {
+        // Si el usuario cancela compartir o falla, continúa con descarga.
+      }
+    }
+
+    // 2) Descarga tradicional por link temporal.
+    const blobUrl = URL.createObjectURL(pdfBlob);
+    try {
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = fileName;
+      link.rel = 'noopener';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      return;
+    } catch {
+      // 3) Último recurso: abrir PDF en nueva pestaña para que el usuario guarde manualmente.
+      window.open(blobUrl, '_blank', 'noopener,noreferrer');
+    } finally {
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+    }
+  }
+
+  private isMobileDevice(): boolean {
+    const mobileRegex = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i;
+    return mobileRegex.test(navigator.userAgent);
   }
 
   private analyzeData(data: SensorData[]): DataAnalysis {

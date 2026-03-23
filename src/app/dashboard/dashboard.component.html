@@ -140,6 +140,31 @@
                                 <small>Última lectura: {{ latestSensorData.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</small>
                             </div>
 
+                            <div class="live-state-banner" [ngClass]="getSensorStatusClass()">
+                                <span class="dot"></span>
+                                <span>{{ getSensorStatusLabel() }}</span>
+                            </div>
+                            
+                            <div class="kpi-cards-grid">
+                                <div class="kpi-card" [ngClass]="getTemperatureCardState()">
+                                    <div class="kpi-title">Temperatura</div>
+                                    <div class="kpi-value">{{ temperatureValue }}<small>°C</small></div>
+                                    <div class="kpi-range">Rango {{ temperatureMin }} - {{ temperatureMax }}</div>
+                                </div>
+                            
+                                <div class="kpi-card" [ngClass]="getHumidityCardState()">
+                                    <div class="kpi-title">Humedad</div>
+                                    <div class="kpi-value">{{ humidityValue }}<small>%</small></div>
+                                    <div class="kpi-range">Rango {{ humidityMin }} - {{ humidityMax }}</div>
+                                </div>
+                            
+                                <div class="kpi-card" [ngClass]="getPhCardState()">
+                                    <div class="kpi-title">pH</div>
+                                    <div class="kpi-value">{{ phValue }}<small> pH</small></div>
+                                    <div class="kpi-range">Rango {{ phMin }} - {{ phMax }}</div>
+                                </div>
+                            </div>
+
                             <div class="live-charts-grid" *ngIf="sensorDataAvailable">
                                 <div class="chart-card">
                                     <div class="chart-title-row">
@@ -160,7 +185,7 @@
                                 </div>
                             </div>
 
-                        <div class="progress-sensors">
+                        <div class="progress-sensors" *ngIf="sensorDataAvailable">
                             <div class="sensor-item">
                                 <label>Temperatura</label>
                                 <div class="progress-bar">
@@ -199,7 +224,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="nutrients-section">
+                        <div class="nutrients-section" *ngIf="sensorDataAvailable" [ngClass]="isDarkTheme ? 'dark-gauges' : 'light-gauges'">
                             <div class="nutrients-header">
                                 <i class="bi bi-circle"></i>
                                 <h4>Nutrientes (NPK)</h4>
@@ -208,30 +233,36 @@
                                 <div class="gauge-item">
                                     <div class="gauge-circle">
                                         <div class="gauge-fill nitrogen"
-                                            [style.background]="getGaugeBackground(nitrogenValue)"></div>
+                                            [style.background]="getGaugeBackground(nitrogenValue, 'nitrogen')"></div>
+                                        <div class="gauge-needle" [style.transform]="getGaugeNeedleTransform(nitrogenValue)"></div>
                                         <div class="gauge-value">{{ nitrogenValue }}%</div>
                                     </div>
                                     <label>Nitrógeno (N)</label>
+                                    <span class="gauge-status" [ngClass]="getNutrientStatus('nitrogen')">{{ getNutrientStatusText('nitrogen') }}</span>
                                     <div class="gauge-raw-value">{{ nitrogenRawValue }} mg/kg</div>
                                 </div>
 
                                 <div class="gauge-item">
                                     <div class="gauge-circle">
                                         <div class="gauge-fill phosphorus"
-                                            [style.background]="getGaugeBackground(phosphorusValue)"></div>
+                                            [style.background]="getGaugeBackground(phosphorusValue, 'phosphorus')"></div>
+                                        <div class="gauge-needle" [style.transform]="getGaugeNeedleTransform(phosphorusValue)"></div>
                                         <div class="gauge-value">{{ phosphorusValue }}%</div>
                                     </div>
                                     <label>Fósforo (P)</label>
+                                    <span class="gauge-status" [ngClass]="getNutrientStatus('phosphorus')">{{ getNutrientStatusText('phosphorus') }}</span>
                                     <div class="gauge-raw-value">{{ phosphorusRawValue }} mg/kg</div>
                                 </div>
 
                                 <div class="gauge-item">
                                     <div class="gauge-circle">
                                         <div class="gauge-fill potassium"
-                                            [style.background]="getGaugeBackground(potassiumValue)"></div>
+                                            [style.background]="getGaugeBackground(potassiumValue, 'potassium')"></div>
+                                        <div class="gauge-needle" [style.transform]="getGaugeNeedleTransform(potassiumValue)"></div>
                                         <div class="gauge-value">{{ potassiumValue }}%</div>
                                     </div>
                                     <label>Potasio (K)</label>
+                                    <span class="gauge-status" [ngClass]="getNutrientStatus('potassium')">{{ getNutrientStatusText('potassium') }}</span>
                                     <div class="gauge-raw-value">{{ potassiumRawValue }} mg/kg</div>
                                 </div>
                             </div>

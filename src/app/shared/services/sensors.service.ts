@@ -64,10 +64,13 @@ export class SensorsService {
       url += `?${params.join('&')}`;
     }
 
-    console.log(`Solicitando histórico de sensores: ${url}`);
-    
     return this.http.get<SensorData[]>(url).pipe(
-      tap(data => console.log(`Histórico recibido: ${data.length} registros`)),
+      tap((data) => {
+        // El histórico se mantiene como referencia para reportes y precarga visual.
+        if (!Array.isArray(data)) {
+          throw new TypeError('Formato de histórico inválido');
+        }
+      }),
       catchError((error: HttpErrorResponse) => {
         console.error('Error al obtener histórico de sensores:', error);
         if (error.status === 401) {
@@ -99,7 +102,7 @@ export class SensorsService {
           (previous, current) =>
             previous?.id === current?.id && previous?.timestamp === current?.timestamp,
         ),
-        tap((data) => this.latestDataSubject.next(data))
+        tap((data) => this.latestDataSubject.next(this.sanitizeSensorData(data)))
       )
       .subscribe();
   }
@@ -110,11 +113,46 @@ export class SensorsService {
   refreshData(deviceId: string = 'esp32-001'): void {
     this.getLatestSensorData(deviceId).subscribe({
       next: (data) => {
-        this.latestDataSubject.next(data);
+        this.latestDataSubject.next(this.sanitizeSensorData(data));
       },
       error: (error) => {
         console.error('Error al refrescar datos:', error);
       }
     });
+  }
+
+  private sanitizeSensorData(data: SensorData | null): SensorData | null {
+    if (!data) {
+      return null;
+    }
+
+    const sanitizeNumericString = (
+      value: string | null,
+      min: number,
+      max: number,
+    ): string | null => {
+      if (value == null) {
+        return null;
+      }
+
+      const parsed = Number.parseFloat(value);
+      if (!Number.isFinite(parsed) || parsed < min || parsed > max) {
+        return null;
+      }
+
+      return parsed.toString();
+    };
+
+    return {
+      ...data,
+      temperature: sanitizeNumericString(data.temperature, -40, 85),
+      humidity: sanitizeNumericString(data.humidity, 0, 100),
+      ph: sanitizeNumericString(data.ph, 0, 14),
+      conductivity: sanitizeNumericString(data.conductivity, 0, 20000),
+      tds: sanitizeNumericString(data.tds, 0, 20000),
+      n: sanitizeNumericString(data.n, 0, 5000),
+      p: sanitizeNumericString(data.p, 0, 5000),
+      k: sanitizeNumericString(data.k, 0, 5000),
+    };
   }
 }

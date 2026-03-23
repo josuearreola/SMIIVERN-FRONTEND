@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subject, takeUntil, filter } from 'rxjs';
+import { Subject, firstValueFrom, takeUntil, filter } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TokenService } from '../../auth/services/token.service';
 import { RoleService } from '../shared/services/role.service';
@@ -21,6 +21,8 @@ export interface Alert {
   timestamp: Date;
 }
 
+type CardState = 'optimal' | 'warning' | 'danger';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -29,6 +31,7 @@ export interface Alert {
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private readonly maxChartPoints = 30;
+  private readonly defaultDeviceId = 'esp32-001';
   private timeIntervalId: ReturnType<typeof setInterval> | null = null;
   private perfilesSyncIntervalId: ReturnType<typeof setInterval> | null = null;
 
@@ -52,7 +55,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Observable para alertas personalizadas
   alerts$: any;
 
-  private destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
   temperatureValue = 24.5;
   temperaturePercent = 60;
@@ -61,9 +64,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   phValue = 6.8;
   phPercent = 68;
 
-  nitrogenValue = 40;
-  phosphorusValue = 30;
-  potassiumValue = 50;
+  nitrogenValue = 0;
+  phosphorusValue = 0;
+  potassiumValue = 0;
 
   // Valores originales en mg/kg para mostrar en UI
   nitrogenRawValue = 0;
@@ -80,7 +83,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   humidityMin = 50;  // Rangos más realistas para humedad
   humidityMax = 95;
   humidityOptimal = 70;
-  phMin = 5.0;
+  phMin = 5;
   phMax = 7.5;
   phOptimal = 6.5;
   nitrogenMin = 0;
@@ -95,11 +98,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Control de estado del perfil
   tienePerfilActivo = false;
-  private subscriptions: any[] = [];
+  private readonly subscriptions: any[] = [];
 
   // Datos reales de sensores
   latestSensorData: SensorData | null = null;
   sensorDataAvailable = false;
+  sensorDataStatus: 'live' | 'stale' | 'offline' = 'offline';
 
   environmentChartData: any = {
     labels: [],
@@ -122,9 +126,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
   chartOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
+    normalized: true,
     animation: {
-      duration: 220,
+      duration: 420,
       easing: 'easeOutCubic',
+    },
+    animations: {
+      x: {
+        duration: 420,
+        easing: 'easeOutQuart',
+      },
+      y: {
+        duration: 420,
+        easing: 'easeOutQuart',
+      },
     },
     interaction: {
       mode: 'index',
@@ -134,10 +149,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
       legend: {
         position: 'bottom',
       },
+      tooltip: {
+        backgroundColor: 'rgba(18, 24, 38, 0.92)',
+        titleColor: '#ffffff',
+        bodyColor: '#e5e7eb',
+        borderColor: 'rgba(148, 163, 184, 0.35)',
+        borderWidth: 1,
+        padding: 10,
+        displayColors: true,
+      },
     },
     elements: {
       point: {
         radius: 0,
+        hoverRadius: 3,
       },
       line: {
         borderWidth: 2,
@@ -146,6 +171,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     scales: {
       x: {
         ticks: { maxTicksLimit: 6 },
+        grid: {
+          color: 'rgba(148, 163, 184, 0.12)',
+        },
+      },
+      y: {
+        grid: {
+          color: 'rgba(148, 163, 184, 0.12)',
+        },
       },
     },
   };
@@ -167,6 +200,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     this.loadUserInfo();
     this.initializeCharts();
+    this.preloadHistoryData();
     this.updateTime();
     this.startTimeUpdate();
     this.initSensorData(); // Inicializar datos reales de sensores
@@ -348,18 +382,35 @@ export class DashboardComponent implements OnInit, OnDestroy {
     console.log('Sistema de riego: ', this.irrigationActive ? 'Activado' : 'Desactivado');
   }
 
-  getGaugeBackground(value: number): string {
-    const percentage = value;
-    const rotation = (percentage / 100) * 180;
+  getGaugeBackground(value: number, nutrient: string): string {
+    const percentage = Math.max(0, Math.min(100, value));
+    const rotation = (percentage / 100) * 360;
+    const state = this.getNutrientStatus(nutrient);
+    const trackColor = this.isDarkTheme
+      ? 'rgba(71, 85, 105, 0.5)'
+      : 'rgba(203, 213, 225, 0.8)';
+    let color = '#ef4444';
+
+    if (state === 'optimal') {
+      color = '#16a34a';
+    } else if (state === 'warning') {
+      color = '#f59e0b';
+    }
+
     return `conic-gradient(
-    from 0deg,
-    #dc3545 0deg,
-    #ffc107 ${rotation * 0.3}deg,
-    #28a745 ${rotation * 0.6}deg,
-    #28a745 ${rotation}deg,
-    #e9ecef ${rotation}deg,
-    #e9ecef 180deg
+    from -90deg,
+    ${color} 0deg,
+    ${color} ${rotation}deg,
+    ${trackColor} ${rotation}deg,
+    ${trackColor} 360deg
   )`;
+  }
+
+  getGaugeNeedleTransform(value: number): string {
+    const clamped = Math.max(0, Math.min(100, value));
+    // 0% = -90deg, 100% = 270deg.
+    const degrees = (clamped * 3.6) - 90;
+    return `translateX(-50%) rotate(${degrees}deg)`;
   }
 
   private initSensorData(): void {
@@ -370,6 +421,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.latestSensorData = data;
           this.updateSensorValues(data);
           this.sensorDataAvailable = true;
+          this.sensorDataStatus = this.getLiveDataStatus(data.timestamp);
+        } else {
+          this.sensorDataStatus = 'offline';
         }
       });
   }
@@ -377,34 +431,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private updateSensorValues(data: SensorData): void {
     // Actualizar temperatura
     if (data.temperature) {
-      this.temperatureValue = parseFloat(data.temperature);
+      this.temperatureValue = Number.parseFloat(data.temperature);
       this.temperaturePercent = this.calculatePercent(this.temperatureValue, this.temperatureMin, this.temperatureMax);
     }
 
     // Actualizar humedad (usar escala completa 0-100% para la barra visual)
     if (data.humidity) {
-      this.humidityValue = parseFloat(data.humidity);
+      this.humidityValue = Number.parseFloat(data.humidity);
       // Para la barra visual, usar siempre 0-100% para que sea proporcional
       this.humidityPercent = Math.max(0, Math.min(100, this.humidityValue));
     }
 
     // Actualizar pH
     if (data.ph) {
-      this.phValue = parseFloat(data.ph);
+      this.phValue = Number.parseFloat(data.ph);
       this.phPercent = this.calculatePercent(this.phValue, this.phMin, this.phMax);
     }
 
     // Actualizar nutrientes (mantener valores originales en mg/kg)
     if (data.n) {
-      this.nitrogenRawValue = parseFloat(data.n);
+      this.nitrogenRawValue = Number.parseFloat(data.n);
       this.nitrogenValue = this.convertNutrientToPercent(this.nitrogenRawValue, 'nitrogen');
     }
     if (data.p) {
-      this.phosphorusRawValue = parseFloat(data.p);
+      this.phosphorusRawValue = Number.parseFloat(data.p);
       this.phosphorusValue = this.convertNutrientToPercent(this.phosphorusRawValue, 'phosphorus');
     }
     if (data.k) {
-      this.potassiumRawValue = parseFloat(data.k);
+      this.potassiumRawValue = Number.parseFloat(data.k);
       this.potassiumValue = this.convertNutrientToPercent(this.potassiumRawValue, 'potassium');
     }
 
@@ -489,7 +543,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.humidityMin = 50;  // Rangos más realistas
     this.humidityMax = 95;
     this.humidityOptimal = 70;
-    this.phMin = 5.0;
+    this.phMin = 5;
     this.phMax = 7.5;
     this.phOptimal = 6.5;
     this.nitrogenMin = 0;
@@ -618,7 +672,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       datasets: this.environmentChartData.datasets.map((dataset: any) => ({
         ...dataset,
         pointRadius: 0,
-        fill: false,
+        fill: true,
+        cubicInterpolationMode: 'monotone',
+        spanGaps: true,
       })),
     };
 
@@ -627,9 +683,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
       datasets: this.nutrientsChartData.datasets.map((dataset: any) => ({
         ...dataset,
         pointRadius: 0,
-        fill: false,
+        fill: true,
+        cubicInterpolationMode: 'monotone',
+        spanGaps: true,
       })),
     };
+
+    this.environmentChartData.datasets[0].backgroundColor = 'rgba(239, 68, 68, 0.12)';
+    this.environmentChartData.datasets[1].backgroundColor = 'rgba(37, 99, 235, 0.12)';
+    this.environmentChartData.datasets[2].backgroundColor = 'rgba(22, 163, 74, 0.12)';
+
+    this.nutrientsChartData.datasets[0].backgroundColor = 'rgba(16, 185, 129, 0.12)';
+    this.nutrientsChartData.datasets[1].backgroundColor = 'rgba(245, 158, 11, 0.12)';
+    this.nutrientsChartData.datasets[2].backgroundColor = 'rgba(139, 92, 246, 0.12)';
   }
 
   private pushLiveChartPoints(data: SensorData): void {
@@ -696,8 +762,159 @@ export class DashboardComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    const parsed = parseFloat(value);
+    const parsed = Number.parseFloat(value);
     return Number.isNaN(parsed) ? null : parsed;
+  }
+
+  private async preloadHistoryData(): Promise<void> {
+    try {
+      const historyData = await firstValueFrom(
+        this.sensorsService.getSensorHistory(this.defaultDeviceId, this.maxChartPoints)
+      );
+
+      if (!historyData || historyData.length === 0) {
+        const latest = await firstValueFrom(
+          this.sensorsService.getLatestSensorData(this.defaultDeviceId)
+        );
+
+        if (latest) {
+          this.latestSensorData = latest;
+          this.updateSensorValues(latest);
+          this.sensorDataAvailable = true;
+          this.sensorDataStatus = this.getLiveDataStatus(latest.timestamp);
+        }
+        return;
+      }
+
+      // Backend entrega DESC; para chart en vivo se renderiza ASC.
+      const ordered = [...historyData].reverse();
+      this.applyNutrientFallbackFromHistory(ordered);
+
+      const latest = ordered.at(-1);
+      const initialPoints = latest ? ordered.slice(0, -1) : ordered;
+      initialPoints.forEach((item) => this.pushLiveChartPoints(item));
+
+      if (latest) {
+        this.latestSensorData = latest;
+        this.updateSensorValues(latest);
+        this.sensorDataAvailable = true;
+        this.sensorDataStatus = this.getLiveDataStatus(latest.timestamp);
+      }
+    } catch {
+      this.sensorDataStatus = 'offline';
+    }
+  }
+
+  private getLiveDataStatus(timestamp: string): 'live' | 'stale' | 'offline' {
+    const value = new Date(timestamp).getTime();
+    if (Number.isNaN(value)) {
+      return 'offline';
+    }
+
+    const ageSeconds = (Date.now() - value) / 1000;
+    if (ageSeconds <= 5) {
+      return 'live';
+    }
+    if (ageSeconds <= 30) {
+      return 'stale';
+    }
+    return 'offline';
+  }
+
+  private applyNutrientFallbackFromHistory(entries: SensorData[]): void {
+    const latestN = this.findLatestNumeric(entries, 'n');
+    const latestP = this.findLatestNumeric(entries, 'p');
+    const latestK = this.findLatestNumeric(entries, 'k');
+
+    if (latestN !== null) {
+      this.nitrogenRawValue = latestN;
+      this.nitrogenValue = this.convertNutrientToPercent(latestN, 'nitrogen');
+    }
+
+    if (latestP !== null) {
+      this.phosphorusRawValue = latestP;
+      this.phosphorusValue = this.convertNutrientToPercent(latestP, 'phosphorus');
+    }
+
+    if (latestK !== null) {
+      this.potassiumRawValue = latestK;
+      this.potassiumValue = this.convertNutrientToPercent(latestK, 'potassium');
+    }
+  }
+
+  private findLatestNumeric(entries: SensorData[], key: 'n' | 'p' | 'k'): number | null {
+    // 1) Preferir el último valor positivo para evitar mostrar 0 si hay lecturas útiles previas.
+    for (let index = entries.length - 1; index >= 0; index--) {
+      const current = entries[index][key];
+      if (current == null || current === '') {
+        continue;
+      }
+
+      const parsed = Number.parseFloat(current);
+      if (Number.isFinite(parsed) && parsed > 0) {
+        return parsed;
+      }
+    }
+
+    // 2) Si no existe positivo, usar cualquier valor numérico válido (incluye 0).
+    for (let index = entries.length - 1; index >= 0; index--) {
+      const current = entries[index][key];
+      if (current == null || current === '') {
+        continue;
+      }
+
+      const parsed = Number.parseFloat(current);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+
+    return null;
+  }
+
+  getSensorStatusLabel(): string {
+    if (this.sensorDataStatus === 'live') {
+      return 'Datos en vivo';
+    }
+    if (this.sensorDataStatus === 'stale') {
+      return 'Datos recientes';
+    }
+    return 'Sin señal';
+  }
+
+  getSensorStatusClass(): string {
+    if (this.sensorDataStatus === 'live') {
+      return 'status-live';
+    }
+    if (this.sensorDataStatus === 'stale') {
+      return 'status-stale';
+    }
+    return 'status-offline';
+  }
+
+  getTemperatureCardState(): CardState {
+    return this.getRangeState(this.temperatureValue, this.temperatureMin, this.temperatureMax, this.temperatureOptimal);
+  }
+
+  getHumidityCardState(): CardState {
+    return this.getRangeState(this.humidityValue, this.humidityMin, this.humidityMax, this.humidityOptimal);
+  }
+
+  getPhCardState(): CardState {
+    return this.getRangeState(this.phValue, this.phMin, this.phMax, this.phOptimal);
+  }
+
+  private getRangeState(value: number, min: number, max: number, optimal: number): CardState {
+    if (value < min || value > max) {
+      return 'danger';
+    }
+
+    const tolerance = Math.abs((max - min) * 0.12);
+    if (Math.abs(value - optimal) <= tolerance) {
+      return 'optimal';
+    }
+
+    return 'warning';
   }
 
   get puedeAccederConfiguracion(): boolean {
@@ -855,13 +1072,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       // Primero intentar obtener cualquier dato histórico sin filtro
       console.log('Intentando obtener datos históricos sin filtro de device_id...');
-      let historyData = await this.sensorsService.getSensorHistory(undefined, 50).toPromise();
+      let historyData = await firstValueFrom(this.sensorsService.getSensorHistory(undefined, 50));
 
       // Si no hay datos, intentar con device_id específico
       if (!historyData || historyData.length === 0) {
         console.log('No se encontraron datos sin filtro, intentando con device_id específico...');
         const deviceId = 'esp32-001';
-        historyData = await this.sensorsService.getSensorHistory(deviceId, 50).toPromise();
+        historyData = await firstValueFrom(this.sensorsService.getSensorHistory(deviceId, 50));
       }
 
       console.log(`Datos obtenidos del servidor: ${historyData?.length || 0} registros`);
@@ -894,7 +1111,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         ...item,
         id: item.id?.toString()
       }));
-      this.reportService.generatePDF(reportData);
+      await this.reportService.generatePDF(reportData);
 
       // Mostrar confirmación de éxito
       this.alertService.showSuccess(
