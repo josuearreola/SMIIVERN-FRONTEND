@@ -879,7 +879,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.sensorDataStatus === 'stale') {
       return 'Datos recientes';
     }
-    return 'Sin señal';
+    return '';
   }
 
   getSensorStatusClass(): string {
